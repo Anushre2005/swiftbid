@@ -1,0 +1,16 @@
+/* App.css - Removed default Vite styles that were interfering with layout */
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Ensure buttons are always visible */
+button {
+  display: inline-block !important;
+  visibility: visible !important;
+}
+
+button[type="submit"] {
+  display: block !important;
+  width: 100%;
+}
