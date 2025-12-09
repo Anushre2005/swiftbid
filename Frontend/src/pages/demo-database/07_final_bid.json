@@ -1,0 +1,42 @@
+[
+  {
+    "rfp_item_no": "1",
+    "sku": "FIN-PIJF-100P-05",
+    "base_price": 780000.0,
+    "transport_adj": 15600.0,
+    "margin_adj": 119340.0,
+    "final_unit_price": 914940.0
+  },
+  {
+    "rfp_item_no": "2",
+    "sku": "FIN-PIJF-50P-05",
+    "base_price": 420000.0,
+    "transport_adj": 8400.0,
+    "margin_adj": 64260.0,
+    "final_unit_price": 492660.0
+  },
+  {
+    "rfp_item_no": "3",
+    "sku": "FIN-PIJF-20P-05",
+    "base_price": 190000.0,
+    "transport_adj": 3800.0,
+    "margin_adj": 29070.0,
+    "final_unit_price": 222870.0
+  },
+  {
+    "rfp_item_no": "4",
+    "sku": "FIN-PIJF-10P-05",
+    "base_price": 110000.0,
+    "transport_adj": 2200.0,
+    "margin_adj": 16830.0,
+    "final_unit_price": 129030.0
+  },
+  {
+    "rfp_item_no": "5",
+    "sku": "FIN-UTP-5P-05",
+    "base_price": 35000.0,
+    "transport_adj": 700.0,
+    "margin_adj": 5355.0,
+    "final_unit_price": 41055.0
+  }
+]

@@ -1,0 +1,255 @@
+{
+  "applicable_standards": [
+    "TEC GR/CUG-01/03 Aug 2003",
+    "TEC GR WIR 06/03. Mar2002",
+    "IEC:28 or IS:12444",
+    "ASTMD1248 Type-II or III",
+    "BS 6234",
+    "IS:8130 (for UTP conductor)",
+    "IS:13176 or IS:5831 (for UTP sheath)"
+  ],
+  "specifications": [
+    {
+      "component": "PIJF Cable Conductor",
+      "parameter": "Diameter",
+      "value": "0.5mm",
+      "tolerance": "\u00b1 0.010mm",
+      "page_ref": "8, 13"
+    },
+    {
+      "component": "PIJF Cable Conductor",
+      "parameter": "Material",
+      "value": "Solid Annealed high conductive Copper (Single strand)",
+      "tolerance": null,
+      "page_ref": "8, 13"
+    },
+    {
+      "component": "PIJF Cable Conductor",
+      "parameter": "Annealing (Elongation)",
+      "value": "Min 15% of a sample wire of 250mm long",
+      "tolerance": null,
+      "page_ref": "13"
+    },
+    {
+      "component": "PIJF Cable Insulation",
+      "parameter": "Dielectric Constant",
+      "value": "Maximum 2.35",
+      "tolerance": null,
+      "page_ref": "13"
+    },
+    {
+      "component": "PIJF Cable Insulation",
+      "parameter": "Tensile strength",
+      "value": "Min 100 kg/cm\u00b2",
+      "tolerance": null,
+      "page_ref": "13"
+    },
+    {
+      "component": "PIJF Cable Insulation",
+      "parameter": "Elongation",
+      "value": "Min 300%",
+      "tolerance": null,
+      "page_ref": "13"
+    },
+    {
+      "component": "PIJF Cable Sheath (10 Pair)",
+      "parameter": "Diameter over sheath",
+      "value": "Shall not exceed 13.2mm",
+      "tolerance": null,
+      "page_ref": "10, 13"
+    },
+    {
+      "component": "PIJF Cable Sheath (100 Pair)",
+      "parameter": "Diameter over sheath",
+      "value": "Shall not exceed 28mm",
+      "tolerance": null,
+      "page_ref": "10, 13"
+    },
+    {
+      "component": "PIJF Cable Sheath",
+      "parameter": "Thickness (Minimum)",
+      "value": "1.50 mm (excluding poly-Al laminate)",
+      "tolerance": null,
+      "page_ref": "13"
+    },
+    {
+      "component": "PIJF Cable Sheath",
+      "parameter": "Tensile strength",
+      "value": "Min 70kg/cm\u00b2",
+      "tolerance": null,
+      "page_ref": "13"
+    },
+    {
+      "component": "PIJF Cable Filling Compound",
+      "parameter": "Material",
+      "value": "Petroleum Jelly",
+      "tolerance": null,
+      "page_ref": "9, 13"
+    },
+    {
+      "component": "PIJF Cable Moisture barrier / Screen",
+      "parameter": "Aluminum Tape Thickness",
+      "value": "0.3 mm",
+      "tolerance": "+ 15% extruded over it",
+      "page_ref": "10, 13"
+    },
+    {
+      "component": "PIJF Cable Armouring",
+      "parameter": "Material",
+      "value": "Galvanized steel tape",
+      "tolerance": null,
+      "page_ref": "10"
+    },
+    {
+      "component": "PIJF Cable Armouring",
+      "parameter": "Type",
+      "value": "Helical (double)",
+      "tolerance": null,
+      "page_ref": "10"
+    },
+    {
+      "component": "PIJF Cable Armouring",
+      "parameter": "Size (Thickness)",
+      "value": "0.5mm",
+      "tolerance": "\u00b110%",
+      "page_ref": "10"
+    },
+    {
+      "component": "PIJF Cable Conductor",
+      "parameter": "Resistance",
+      "value": "86 Ohms/ km",
+      "tolerance": "\u00b1 6 Ohms/ km",
+      "page_ref": "14"
+    },
+    {
+      "component": "PIJF Cable Mutual Capacitance",
+      "parameter": "Average (800 to 1000 Hz)",
+      "value": "52 nF/km",
+      "tolerance": "\u00b1 3nF/km",
+      "page_ref": "14"
+    },
+    {
+      "component": "PIJF Cable Capacitance unbalance (Pair to Pair)",
+      "parameter": "Average (800-1000Hz)",
+      "value": "\u2264 50 pF/Km",
+      "tolerance": null,
+      "page_ref": "14"
+    },
+    {
+      "component": "PIJF Cable Attenuation",
+      "parameter": "Maximum average (150Khz at 20 deg C)",
+      "value": "8.25 dB/Km",
+      "tolerance": null,
+      "page_ref": "14"
+    },
+    {
+      "component": "UTP Cable Conductor",
+      "parameter": "Diameter",
+      "value": "0.5mm",
+      "tolerance": "\u00b1 0.010mm",
+      "page_ref": "15"
+    },
+    {
+      "component": "UTP Cable Conductor",
+      "parameter": "Material",
+      "value": "Solid annealed Bare copper conductor (Electrolytic)",
+      "tolerance": null,
+      "page_ref": "15"
+    },
+    {
+      "component": "UTP Cable Insulation",
+      "parameter": "Lay length of Twisted pair",
+      "value": "\u2264 80mm",
+      "tolerance": null,
+      "page_ref": "15"
+    },
+    {
+      "component": "UTP Cable Sheath",
+      "parameter": "Thickness",
+      "value": "Minimum 0.65mm",
+      "tolerance": null,
+      "page_ref": "15"
+    },
+    {
+      "component": "UTP Cable Sheath",
+      "parameter": "Diameter of overall cable",
+      "value": "6mm",
+      "tolerance": "\u00b1 1mm",
+      "page_ref": "15"
+    },
+    {
+      "component": "UTP Cable Conductor",
+      "parameter": "Resistance",
+      "value": "86 ohms/km",
+      "tolerance": "\u00b1 6 ohms/km",
+      "page_ref": "15"
+    },
+    {
+      "component": "UTP Cable Insulation",
+      "parameter": "Minimum Insulation resistance",
+      "value": "50 M.ohms/km",
+      "tolerance": null,
+      "page_ref": "15"
+    },
+    {
+      "component": "UTP Cable Capacitance Unbalance (pair to pair)",
+      "parameter": "Maximum",
+      "value": "Shall not exceed 230PF",
+      "tolerance": null,
+      "page_ref": "15"
+    },
+    {
+      "component": "Packing Length (PIJF)",
+      "parameter": "Drum Length",
+      "value": "1000 meters or as per nominal length in Table-1 of TEC GR/CUG-01/03 Aug-2003",
+      "tolerance": "+5% / -2%",
+      "page_ref": "11"
+    },
+    {
+      "component": "Packing Length (UTP)",
+      "parameter": "Drum Length",
+      "value": "500m or nominal length specified in TEC GR WIR 06/03, March 2002",
+      "tolerance": "+5% / -2%",
+      "page_ref": "15"
+    }
+  ],
+  "testing_requirements": [
+    "Polythene for conductor insulation test",
+    "Dielectric constant or permittivity test",
+    "Volume resistivity of petroleum jelly test",
+    "Permittivity of petroleum jelly test",
+    "Thickness of Poly-Al tape test",
+    "Thickness of Sheath test",
+    "Diameter over Sheath test",
+    "Variation between the maximum and minimum diameter over sheath at any cross section test",
+    "Elongation and tensile strength of conductor insulation test",
+    "Thickness of conductor test",
+    "Annealing of conductor test",
+    "Cable bend test",
+    "Water penetration test",
+    "Continuity of conductors test",
+    "Conductor resistance test",
+    "Resistance unbalance test",
+    "Resistance of poly-al tape test",
+    "Mutual capacitance test",
+    "Capacitance unbalance (Pair to Pair) test",
+    "Capacitance unbalance (Pair to Gnd) test",
+    "Dielectric strength (High voltage) between conductors test",
+    "Dielectric strength (High voltage) between all conductors and shield test",
+    "Insulation resistance test",
+    "Equal level far end cross talk (150Khz) test",
+    "Near end cross talk (150Khz) test",
+    "Attenuation (150Khz) test",
+    "Spark test (Conductor to conductor: At 2.4 KV DC for 3 Sec)",
+    "Spark test (Conductor to shield: At 5.0 KV DC for 3 Sec)",
+    "High Voltage test (UTP: 2KV RMS for 1 minute)"
+  ],
+  "inspection_requirements": [
+    {
+      "inspection_type": "Pre-Delivery Inspection",
+      "location": "Factory site/online video mode",
+      "agency": "SDSC SHAR Pre-Delivery inspection team / Department CLIP team",
+      "expense_bearer": null
+    }
+  ]
+}

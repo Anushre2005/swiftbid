@@ -1,0 +1,52 @@
+[
+  {
+    "rfp_item_no": "1",
+    "description": "100 Pair, 0.5mm diameter, PIJF armoured Telecom copper cable (Single strand)",
+    "quantity": 20.0,
+    "unit": "kms",
+    "category": "Armoured PIJF Copper Cable",
+    "delivery_location": "SDSC SHAR, Sriharikota",
+    "requested_make": null,
+    "requires_mii_declaration": true
+  },
+  {
+    "rfp_item_no": "2",
+    "description": "50 Pair, 0.5mm diameter, PIJF armoured Telecom copper cable (Single strand)",
+    "quantity": 19.0,
+    "unit": "kms",
+    "category": "Armoured PIJF Copper Cable",
+    "delivery_location": "SDSC SHAR, Sriharikota",
+    "requested_make": null,
+    "requires_mii_declaration": true
+  },
+  {
+    "rfp_item_no": "3",
+    "description": "20 Pair, 0.5mm diameter, PIJF armoured Telecom copper cable (Single strand)",
+    "quantity": 8.0,
+    "unit": "kms",
+    "category": "Armoured PIJF Copper Cable",
+    "delivery_location": "SDSC SHAR, Sriharikota",
+    "requested_make": null,
+    "requires_mii_declaration": true
+  },
+  {
+    "rfp_item_no": "4",
+    "description": "10 pair, 0.5mm diameter, PIJF armoured Telecom copper cable (Single strand)",
+    "quantity": 5.0,
+    "unit": "kms",
+    "category": "Armoured PIJF Copper Cable",
+    "delivery_location": "SDSC SHAR, Sriharikota",
+    "requested_make": null,
+    "requires_mii_declaration": true
+  },
+  {
+    "rfp_item_no": "5",
+    "description": "5 pair, 0.5mm diameter, UTP Telecom Copper cable (Single strand)",
+    "quantity": 5.0,
+    "unit": "kms",
+    "category": "UTP Telecom Copper Cable",
+    "delivery_location": "SDSC SHAR, Sriharikota",
+    "requested_make": null,
+    "requires_mii_declaration": true
+  }
+]

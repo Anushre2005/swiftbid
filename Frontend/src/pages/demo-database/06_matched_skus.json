@@ -1,0 +1,32 @@
+[
+  {
+    "rfp_item_no": "1",
+    "matched_sku": "FIN-PIJF-100P-05",
+    "match_confidence": "High",
+    "notes": "Exact match for 100 Pair, 0.5mm PIJF Armoured Telecom Cable. The SKU meets the conductor, insulation, armouring, and TEC GR/CUG-01/03 standard requirements. MII is 95%."
+  },
+  {
+    "rfp_item_no": "2",
+    "matched_sku": "FIN-PIJF-50P-05",
+    "match_confidence": "High",
+    "notes": "Exact match for 50 Pair, 0.5mm PIJF Armoured Telecom Cable. The SKU meets the conductor, insulation, armouring, and TEC GR/CUG-01/03 standard requirements. MII is 95%."
+  },
+  {
+    "rfp_item_no": "3",
+    "matched_sku": "FIN-PIJF-20P-05",
+    "match_confidence": "High",
+    "notes": "Exact match for 20 Pair, 0.5mm PIJF Armoured Telecom Cable. The SKU meets the conductor, insulation, armouring, and TEC GR/CUG-01/03 standard requirements. MII is 95%."
+  },
+  {
+    "rfp_item_no": "4",
+    "matched_sku": "FIN-PIJF-10P-05",
+    "match_confidence": "High",
+    "notes": "Exact match for 10 Pair, 0.5mm PIJF Armoured Telecom Cable. The SKU meets the conductor, insulation, armouring, and TEC GR/CUG-01/03 standard requirements. MII is 95%."
+  },
+  {
+    "rfp_item_no": "5",
+    "matched_sku": "FIN-UTP-5P-05",
+    "match_confidence": "High",
+    "notes": "Exact match for 5 Pair, 0.5mm UTP Telecom Copper cable. The SKU is Unarmored UTP, 0.5mm conductor, and complies with the GR/WIR 06/03 standard. MII is 95%."
+  }
+]

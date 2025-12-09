@@ -1,0 +1,20 @@
+{
+  "currency": "INR (Inferred)",
+  "incoterms": "F.O.R. Destination Basis (SRIHARIKOTA)",
+  "unloading_responsibility": "Client/Department (SDSC SHAR) Scope",
+  "packing_requirements": "Sufficiently and properly packed for transport, at vendor's expense. Cable must be wound on strong wooden drums. Ends of cable sealed with rubber or PVC caps. Drum length tolerance: +5% / -2% of nominal length.",
+  "insurance_responsibility": "Vendor/Supplier (Comprehensive risk coverage at supplier's own cost)",
+  "payment_terms": "100% payment after receipt and acceptance of materials on pro-rata basis.",
+  "delivery_period_weeks": 8,
+  "taxes_and_duties": "Taxes (GST, duties) to be indicated separately in percentage. If silent, rates are presumed inclusive of taxes & duties.",
+  "warranty_terms": "Minimum one year from the date of supply and acceptance.",
+  "liquidated_damages": {
+    "rate_per_week": "0.5% per week",
+    "max_cap": "10.0% of the undelivered Item"
+  },
+  "financial_instruments": {
+    "performance_bank_guarantee": "3% of the total value, valid till the warranty period plus 2 months grace.",
+    "security_deposit": "3% of the contract price, valid till completion of total contractual obligation plus 90 days.",
+    "emd_amount": null
+  }
+}

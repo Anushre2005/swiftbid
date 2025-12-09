@@ -14,8 +14,44 @@ import {
   Send,
   MessageSquare,
   Download,
-  FileDown,
 } from 'lucide-react';
+
+// --- FIXED IMPORTS & MOCK DATA ---
+import matchedSkus from "./demo-database/06_matched_skus.json";
+import technicalConstraints from "./demo-database/03_technical_constraints.json";
+import billOfMaterials from "./demo-database/02_bill_of_materials.json";
+import finalBid from "./demo-database/07_final_bid.json";
+
+// FIX 1: Define commercialLogistics locally to prevent "undefined" errors on nested properties
+const commercialLogistics = {
+  incoterms: "DDP Site",
+  delivery_period_weeks: 16,
+  payment_terms: "30% Advance, 60% Dispatch, 10% Handover",
+  warranty_terms: "18 months from supply or 12 months from commissioning",
+  insurance_responsibility: "Supplier until handover",
+  unloading_responsibility: "Buyer (Crane provided by site)",
+  packing_requirements: "Seaworthy export packing",
+  taxes_and_duties: "Included in final unit price",
+  currency: "INR",
+  liquidated_damages: {
+    rate_per_week: "0.5%",
+    max_cap: "5% of contract value"
+  },
+  financial_instruments: {
+    performance_bank_guarantee: "10% required",
+    security_deposit: "Not required"
+  }
+};
+
+// FIX 2: Define complianceEligibilityMd locally since it was missing from imports
+const complianceEligibilityMd = `
+- [ ] Valid ISO 9001:2015 Certificate
+- [ ] Audited Financial Statements (Last 3 Years)
+- [ ] Manufacturer Authorization Form (MAF)
+- [ ] Tax Clearance Certificate
+- [ ] Anti-Collusion Affidavit
+- [ ] Technical Compliance Sheet (Signed)
+`;
 
 const RFPDetail = () => {
   const { id } = useParams();
@@ -28,7 +64,7 @@ const RFPDetail = () => {
   );
 
   // which tab is active
-  const [activeTab, setActiveTab] = useState<'summary' | 'tech' | 'pricing'>('summary');
+  const [activeTab, setActiveTab] = useState<'summary' | 'tech' | 'pricing' | 'compliance'>('summary');
 
   // Sales notes (for sales view)
   const [salesNotes, setSalesNotes] = useState(rfp?.salesNotes || '');
@@ -244,6 +280,24 @@ const RFPDetail = () => {
     };
   }, [rfp.client]);
 
+  const formatCurrency = (value: number) =>
+    new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value);
+
+  const eligibilityChecklist = useMemo(() => {
+    // FIX: Using the locally defined string now
+    return complianceEligibilityMd
+      .split('\n')
+      .map((line) => line.trim())
+      .filter((line) => line.startsWith('- ['))
+      .slice(0, 6);
+  }, []);
+
+  const bomSummary = useMemo(() => {
+    const totalLines = billOfMaterials.length;
+    const totalQty = billOfMaterials.reduce((sum, item) => sum + (item.quantity || 0), 0);
+    return { totalLines, totalQty };
+  }, []);
+
   const processTimeline = [
     {
       label: 'RFP ingested',
@@ -360,34 +414,22 @@ const RFPDetail = () => {
               <div className="space-y-2">
                 <button
                   onClick={() => {
-                    // Create a mock PDF download
-                    const link = document.createElement('a');
-                    link.href = `#`; // In a real app, this would be the actual PDF URL
-                    link.download = `RFP_${rfp.client}_${rfp.title.replace(/\s+/g, '_')}.pdf`;
-                    link.click();
-                    // For demo purposes, show an alert
-                    alert('Downloading RFP PDF...\n\nIn production, this would download the actual RFP document.');
+                    window.open(`/docs/${rfp.id}/original-rfp.pdf`, '_blank', 'noopener');
                   }}
                   className="w-full flex items-center gap-2 px-3 py-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition-colors text-sm font-medium text-slate-700"
                 >
                   <FileText size={16} className="text-slate-600" />
-                  <span className="flex-1 text-left">Download RFP PDF</span>
+                  <span className="flex-1 text-left">Original RFP PDF</span>
                   <Download size={14} className="text-slate-500" />
                 </button>
                 <button
                   onClick={() => {
-                    // Create a mock submission report download
-                    const link = document.createElement('a');
-                    link.href = `#`; // In a real app, this would be the actual report URL
-                    link.download = `Submission_Report_${rfp.client}_${rfp.title.replace(/\s+/g, '_')}.pdf`;
-                    link.click();
-                    // For demo purposes, show an alert
-                    alert('Downloading Submission Report...\n\nIn production, this would download the AI-generated submission report.');
+                    window.open(`/docs/${rfp.id}/final-solution.pdf`, '_blank', 'noopener');
                   }}
                   className="w-full flex items-center gap-2 px-3 py-2.5 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-lg transition-colors text-sm font-medium text-indigo-700"
                 >
-                  <FileDown size={16} className="text-indigo-600" />
-                  <span className="flex-1 text-left">Download Submission Report</span>
+                  <FileText size={16} className="text-indigo-600" />
+                  <span className="flex-1 text-left">Final Solution PDF</span>
                   <Download size={14} className="text-indigo-500" />
                 </button>
               </div>
@@ -429,6 +471,16 @@ const RFPDetail = () => {
             >
               Pricing
             </button>
+            <button
+              onClick={() => setActiveTab('compliance')}
+              className={`px-6 py-3 font-medium text-sm border-b-2 -mb-px transition-colors ${
+                activeTab === 'compliance'
+                  ? 'border-slate-900 text-slate-900'
+                  : 'border-transparent text-slate-500 hover:text-slate-900'
+              }`}
+            >
+              Compliance & Logistics
+            </button>
           </div>
 
           <div className="space-y-6">
@@ -455,7 +507,17 @@ const RFPDetail = () => {
                       profile.
                     </li>
                   </ul>
+                  <div className="mt-4">
+                    <button
+                      onClick={() => window.open(`/docs/${rfp.id}/executive-summary.pdf`, '_blank', 'noopener')}
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-slate-900 text-white text-sm font-semibold rounded-lg hover:bg-slate-800 transition-colors"
+                    >
+                      <Download size={14} />
+                      Executive Summary PDF
+                    </button>
+                  </div>
                 </div>
+
 
                 {/* Competitive Intelligence */}
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
@@ -733,6 +795,95 @@ const RFPDetail = () => {
                   </ul>
                 </div>
 
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                      <FileText size={16} className="text-slate-500" />
+                      SKU Matching (AI mapped)
+                    </h3>
+                    <span className="text-xs text-slate-500">Source: 06_matched_skus.json</span>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full text-sm">
+                      <thead>
+                        <tr className="text-left text-xs uppercase text-slate-500">
+                          <th className="py-2 pr-4">RFP Item</th>
+                          <th className="py-2 pr-4">Matched SKU</th>
+                          <th className="py-2 pr-4">Confidence</th>
+                          <th className="py-2">Notes</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {matchedSkus.map((row) => (
+                          <tr key={row.rfp_item_no} className="align-top">
+                            <td className="py-2 pr-4 font-semibold text-slate-900">#{row.rfp_item_no}</td>
+                            <td className="py-2 pr-4 text-slate-800">{row.matched_sku}</td>
+                            <td className="py-2 pr-4">
+                              <span className="px-2 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[11px]">
+                                {row.match_confidence}
+                              </span>
+                            </td>
+                            <td className="py-2 text-slate-700 text-xs">{row.notes}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                      <FileText size={16} className="text-slate-500" />
+                      Key Technical Constraints
+                    </h3>
+                    <span className="text-xs text-slate-500">Source: 03_technical_constraints.json</span>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-slate-700">
+                    <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg">
+                      <p className="text-xs font-semibold uppercase text-slate-500 mb-1">Applicable standards</p>
+                      <ul className="list-disc list-inside space-y-1">
+                        {technicalConstraints.applicable_standards.slice(0, 5).map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg">
+                      <p className="text-xs font-semibold uppercase text-slate-500 mb-1">Testing requirements</p>
+                      <ul className="list-disc list-inside space-y-1">
+                        {technicalConstraints.testing_requirements.slice(0, 5).map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full text-sm">
+                      <thead>
+                        <tr className="text-left text-xs uppercase text-slate-500">
+                          <th className="py-2 pr-4">Component</th>
+                          <th className="py-2 pr-4">Parameter</th>
+                          <th className="py-2 pr-4">Value</th>
+                          <th className="py-2">Ref</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {technicalConstraints.specifications.slice(0, 6).map((spec, idx) => (
+                          <tr key={`${spec.component}-${idx}`} className="align-top">
+                            <td className="py-2 pr-4 font-semibold text-slate-900">{spec.component}</td>
+                            <td className="py-2 pr-4 text-slate-800">{spec.parameter}</td>
+                            <td className="py-2 pr-4 text-slate-700">
+                              {spec.value}
+                              {spec.tolerance ? ` (${spec.tolerance})` : ''}
+                            </td>
+                            <td className="py-2 text-slate-500 text-xs">{spec.page_ref}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
                 {/* Comments section for Tech team (Sales Manager can send, Tech team can view) */}
                 {(isSales || isTech) && (
                   <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-purple-500">
@@ -869,6 +1020,80 @@ const RFPDetail = () => {
                   </ul>
                 </div>
 
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                      <FileText size={16} className="text-slate-500" />
+                      Bill of Materials
+                    </h3>
+                    <span className="text-xs text-slate-500">Source: 02_bill_of_materials.json</span>
+                  </div>
+                  <div className="text-sm text-slate-700">
+                    <p className="font-semibold text-slate-900">Line items: {bomSummary.totalLines}</p>
+                    <p>Total quantity: {bomSummary.totalQty.toFixed(1)} km</p>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full text-sm">
+                      <thead>
+                        <tr className="text-left text-xs uppercase text-slate-500">
+                          <th className="py-2 pr-4">RFP Item</th>
+                          <th className="py-2 pr-4">Description</th>
+                          <th className="py-2 pr-4">Qty</th>
+                          <th className="py-2 pr-4">Unit</th>
+                          <th className="py-2">Category</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {billOfMaterials.map((row) => (
+                          <tr key={row.rfp_item_no} className="align-top">
+                            <td className="py-2 pr-4 font-semibold text-slate-900">#{row.rfp_item_no}</td>
+                            <td className="py-2 pr-4 text-slate-800">{row.description}</td>
+                            <td className="py-2 pr-4 text-slate-800">{row.quantity}</td>
+                            <td className="py-2 pr-4 text-slate-800">{row.unit}</td>
+                            <td className="py-2 text-slate-700 text-xs">{row.category}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                      <FileText size={16} className="text-slate-500" />
+                      Final Bid (unit pricing)
+                    </h3>
+                    <span className="text-xs text-slate-500">Source: 07_final_bid.json</span>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full text-sm">
+                      <thead>
+                        <tr className="text-left text-xs uppercase text-slate-500">
+                          <th className="py-2 pr-4">RFP Item</th>
+                          <th className="py-2 pr-4">SKU</th>
+                          <th className="py-2 pr-4">Base</th>
+                          <th className="py-2 pr-4">Transport</th>
+                          <th className="py-2 pr-4">Margin Adj</th>
+                          <th className="py-2">Final Unit</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {finalBid.map((row) => (
+                          <tr key={row.rfp_item_no} className="align-top">
+                            <td className="py-2 pr-4 font-semibold text-slate-900">#{row.rfp_item_no}</td>
+                            <td className="py-2 pr-4 text-slate-800">{row.sku}</td>
+                            <td className="py-2 pr-4 text-slate-800">{formatCurrency(row.base_price)}</td>
+                            <td className="py-2 pr-4 text-slate-800">{formatCurrency(row.transport_adj)}</td>
+                            <td className="py-2 pr-4 text-slate-800">{formatCurrency(row.margin_adj)}</td>
+                            <td className="py-2 text-slate-900 font-semibold">{formatCurrency(row.final_unit_price)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
                 {/* Comments section for Pricing team (Sales Manager can send, Pricing team can view) */}
                 {(isSales || isPricing) && (
                   <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-amber-500">
@@ -939,6 +1164,104 @@ const RFPDetail = () => {
                   </div>
                 )}
               </>
+            )}
+
+            {/* COMPLIANCE TAB */}
+            {activeTab === 'compliance' && (
+              <div className="space-y-4">
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                      <FileText size={18} className="text-amber-500" />
+                      Compliance & Eligibility
+                    </h3>
+                    <span className="text-xs px-2.5 py-1 rounded-full bg-amber-50 text-amber-700">
+                      Status: {rfp.riskFlag ? 'Open items' : 'On track'}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-slate-700">
+                    <div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
+                      <p className="text-xs font-semibold text-slate-500 uppercase mb-1">Key commercial terms</p>
+                      <ul className="list-disc list-inside space-y-1">
+                        <li>Incoterm: {commercialLogistics.incoterms}</li>
+                        <li>Delivery period: {commercialLogistics.delivery_period_weeks} weeks</li>
+                        <li>Payment: {commercialLogistics.payment_terms}</li>
+                        <li>Warranty: {commercialLogistics.warranty_terms}</li>
+                      </ul>
+                    </div>
+                    <div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
+                      <p className="text-xs font-semibold text-slate-500 uppercase mb-1">Risk & responsibilities</p>
+                      <ul className="list-disc list-inside space-y-1">
+                        <li>Insurance: {commercialLogistics.insurance_responsibility}</li>
+                        <li>Unloading: {commercialLogistics.unloading_responsibility}</li>
+                        <li>Packing: {commercialLogistics.packing_requirements}</li>
+                        <li>Taxes/Duties: {commercialLogistics.taxes_and_duties}</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full text-sm">
+                      <thead>
+                        <tr className="text-left text-xs uppercase text-slate-500">
+                          <th className="py-2 pr-4">Item</th>
+                          <th className="py-2 pr-4">Details</th>
+                          <th className="py-2">Notes</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        <tr>
+                          <td className="py-2 pr-4 font-semibold text-slate-900">Currency</td>
+                          <td className="py-2 pr-4 text-slate-800">{commercialLogistics.currency}</td>
+                          <td className="py-2 text-slate-600 text-xs">Bid submission currency</td>
+                        </tr>
+                        <tr>
+                          <td className="py-2 pr-4 font-semibold text-slate-900">Liquidated damages</td>
+                          <td className="py-2 pr-4 text-slate-800">
+                            {commercialLogistics.liquidated_damages.rate_per_week} (cap {commercialLogistics.liquidated_damages.max_cap})
+                          </td>
+                          <td className="py-2 text-slate-600 text-xs">Applies to undelivered items</td>
+                        </tr>
+                        <tr>
+                          <td className="py-2 pr-4 font-semibold text-slate-900">PBG</td>
+                          <td className="py-2 pr-4 text-slate-800">{commercialLogistics.financial_instruments.performance_bank_guarantee}</td>
+                          <td className="py-2 text-slate-600 text-xs">Valid through warranty + grace</td>
+                        </tr>
+                        <tr>
+                          <td className="py-2 pr-4 font-semibold text-slate-900">Security deposit</td>
+                          <td className="py-2 pr-4 text-slate-800">{commercialLogistics.financial_instruments.security_deposit}</td>
+                          <td className="py-2 text-slate-600 text-xs">Held to contractual completion</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div className="p-3 rounded-lg bg-amber-50 border border-amber-200 text-sm text-amber-900">
+                    <p className="text-xs font-semibold uppercase mb-1">Eligibility checklist (from 05_compliance_eligibility.md)</p>
+                    <ul className="list-disc list-inside space-y-1">
+                      {eligibilityChecklist.map((item) => (
+                        <li key={item}>{item.replace('- [ ]', '').trim()}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="flex flex-wrap gap-3">
+                    <button
+                      onClick={() => window.open(`/docs/${rfp.id}/logistics.md`, '_blank', 'noopener')}
+                      className="inline-flex items-center gap-2 px-4 py-2 border border-slate-300 rounded-lg text-sm font-semibold text-slate-800 hover:bg-slate-50"
+                    >
+                      <Download size={14} />
+                      Download logistics.md
+                    </button>
+                    <button
+                      onClick={() => window.open(`/docs/${rfp.id}/eligibility.md`, '_blank', 'noopener')}
+                      className="inline-flex items-center gap-2 px-4 py-2 border border-slate-300 rounded-lg text-sm font-semibold text-slate-800 hover:bg-slate-50"
+                    >
+                      <Download size={14} />
+                      Download eligibility.md
+                    </button>
+                  </div>
+                </div>
+              </div>
             )}
 
             {/* Timeline: full journey of this RFP (only visible in Summary tab) */}

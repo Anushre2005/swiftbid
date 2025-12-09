@@ -1,11 +1,13 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { viteStaticCopy } from "vite-plugin-static-copy";
 
 export default defineConfig({
   base: "/swiftbid/",
-  plugins: [react()],
-  build: {
-    outDir: "../docs",   // build into /docs at repo root
-    emptyOutDir: true,   // clear old files in /docs
-  },
+  plugins: [
+    react(),
+  ],
+  optimizeDeps: {
+    include: ["../demo-database/*.json"]
+  }
 });
