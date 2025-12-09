@@ -6,12 +6,11 @@
   "homepage": "https://anushre2005.github.io/swiftbid",
 
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview",
-    "deploy": "gh-pages -d dist"
-  },
+  "dev": "vite",
+  "build": "vite build",
+  "lint": "eslint .",
+  "preview": "vite preview"
+},
 
   "dependencies": {
     "clsx": "^2.1.1",
