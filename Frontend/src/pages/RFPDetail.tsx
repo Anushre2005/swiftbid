@@ -185,6 +185,65 @@ const RFPDetail = () => {
     };
   }, [rfp.client]);
 
+  const clientIntel = useMemo(() => {
+    const presets: Record<
+      string,
+      {
+        history: Array<{ year: string; deal: string; outcome: 'won' | 'lost' | 'pending'; value: string }>;
+        decisionMakers: Array<{ name: string; role: string; preference: string }>;
+        painPoints: string[];
+        buyingCriteria: string[];
+      }
+    > = {
+      InfraCorp: {
+        history: [
+          { year: '2024', deal: 'WAN refresh', outcome: 'won', value: '$1.1M' },
+          { year: '2023', deal: 'Campus LAN', outcome: 'lost', value: '$900k' },
+          { year: '2022', deal: 'MPLS migration', outcome: 'won', value: '$700k' },
+        ],
+        decisionMakers: [
+          { name: 'Sanjay Mehta', role: 'CIO', preference: 'Uptime and rollout certainty; minimal disruption' },
+          { name: 'Lisa Carter', role: 'Procurement', preference: 'Transparent pricing, clear SLA penalties' },
+        ],
+        painPoints: ['Legacy sites with mixed vendors', 'Aggressive timeline for cutover', 'Strict SLA penalties'],
+        buyingCriteria: ['Demonstrated rollout plan', 'SLA guarantees with credits', 'Local support coverage'],
+      },
+      'SwiftCorp Global': {
+        history: [
+          { year: '2024', deal: 'Cloud phase 1', outcome: 'won', value: '$1.6M' },
+          { year: '2023', deal: 'Data center move', outcome: 'lost', value: '$2.0M' },
+        ],
+        decisionMakers: [
+          { name: 'Amelia Rhodes', role: 'VP Infrastructure', preference: 'Referenceable migrations and rollback plans' },
+          { name: 'Dev Patel', role: 'Finance controller', preference: 'Cost predictability; phased payments' },
+        ],
+        painPoints: ['Risk of downtime during migration', 'Desire for phased spend', 'Need for joint runbooks'],
+        buyingCriteria: ['Pilot-first approach', 'Transparent T&M bands', 'Shared success milestones'],
+      },
+      default: {
+        history: [
+          { year: '2024', deal: 'Security upgrade', outcome: 'won', value: '$950k' },
+          { year: '2023', deal: 'Network audit', outcome: 'won', value: '$250k' },
+        ],
+        decisionMakers: [
+          { name: 'Primary Sponsor', role: 'Director IT', preference: 'Clear roadmap and ownership' },
+          { name: 'Procurement Lead', role: 'Procurement', preference: 'Clean commercials and SLA clarity' },
+        ],
+        painPoints: ['Need faster delivery', 'Compliance documentation burden'],
+        buyingCriteria: ['Rapid deployment plan', 'Complete compliance pack'],
+      },
+    };
+
+    const picked = presets[rfp.client as keyof typeof presets] ?? presets.default;
+    const winRate =
+      picked.history.filter((h) => h.outcome === 'won').length / Math.max(picked.history.length, 1);
+
+    return {
+      ...picked,
+      historicalWinRate: Math.round(winRate * 100),
+    };
+  }, [rfp.client]);
+
   const processTimeline = [
     {
       label: 'RFP ingested',
@@ -441,6 +500,81 @@ const RFPDetail = () => {
                       <ul className="list-disc list-inside text-sm text-amber-900 space-y-1">
                         {competitorIntel.gaps.map((item) => (
                           <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Client Intelligence */}
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-5">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Users size={18} className="text-slate-500" />
+                      <h3 className="text-lg font-bold text-slate-900">Client Intelligence</h3>
+                    </div>
+                    <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700">
+                      Historical win rate: {clientIntel.historicalWinRate}%
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <p className="text-xs font-semibold text-slate-500 uppercase">Past interactions</p>
+                      <div className="space-y-2">
+                        {clientIntel.history.map((item) => (
+                          <div
+                            key={`${item.year}-${item.deal}`}
+                            className="p-3 rounded-lg border border-slate-200 bg-slate-50 flex items-center justify-between"
+                          >
+                            <div>
+                              <p className="text-sm font-semibold text-slate-900">{item.deal}</p>
+                              <p className="text-xs text-slate-600">{item.year} · {item.value}</p>
+                            </div>
+                            <span
+                              className={`text-[11px] px-2 py-0.5 rounded-full ${
+                                item.outcome === 'won'
+                                  ? 'bg-emerald-100 text-emerald-700'
+                                  : item.outcome === 'lost'
+                                  ? 'bg-rose-100 text-rose-700'
+                                  : 'bg-amber-100 text-amber-700'
+                              }`}
+                            >
+                              {item.outcome === 'won' ? 'Won' : item.outcome === 'lost' ? 'Lost' : 'Pending'}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <p className="text-xs font-semibold text-slate-500 uppercase">Decision makers</p>
+                      <div className="space-y-2">
+                        {clientIntel.decisionMakers.map((dm) => (
+                          <div key={dm.name} className="p-3 rounded-lg border border-slate-200 bg-white">
+                            <p className="text-sm font-semibold text-slate-900">{dm.name}</p>
+                            <p className="text-xs text-slate-600">{dm.role}</p>
+                            <p className="text-xs text-slate-700 mt-1">Prefers: {dm.preference}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="p-4 rounded-lg border border-amber-100 bg-amber-50">
+                      <p className="text-xs font-semibold text-amber-700 uppercase mb-2">Client pain points</p>
+                      <ul className="list-disc list-inside text-sm text-amber-900 space-y-1">
+                        {clientIntel.painPoints.map((p) => (
+                          <li key={p}>{p}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="p-4 rounded-lg border border-indigo-100 bg-indigo-50">
+                      <p className="text-xs font-semibold text-indigo-700 uppercase mb-2">Buying criteria</p>
+                      <ul className="list-disc list-inside text-sm text-indigo-900 space-y-1">
+                        {clientIntel.buyingCriteria.map((c) => (
+                          <li key={c}>{c}</li>
                         ))}
                       </ul>
                     </div>
