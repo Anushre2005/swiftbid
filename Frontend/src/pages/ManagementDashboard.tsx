@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { mockRFPs } from '../data/mockData';
 import { Link, useNavigate } from 'react-router-dom';
 import StageProgressBar from '../components/shared/StageProgressBar';
-import { Clock, DollarSign, Activity, CheckCircle2, ListFilter } from 'lucide-react';
+import { Clock, DollarSign, Activity, CheckCircle2, ListFilter, Sparkles, Target } from 'lucide-react';
 import type { RFPStage, UserRole } from '../types';
 
 const ManagementDashboard = () => {
@@ -12,11 +12,20 @@ const ManagementDashboard = () => {
   const [urgency, setUrgency] = useState<'all' | 'soon' | 'month'>('all');
   const [ownerFilter, setOwnerFilter] = useState<'all' | string>('all');
   const [riskFilter, setRiskFilter] = useState<'all' | 'high'>('all');
+  const [focusFilter, setFocusFilter] = useState<'all' | 'quickWins' | 'strategicBets'>('all');
   
-  const totalPipelineValue = mockRFPs.reduce((sum, rfp) => {
-    const value = parseFloat(rfp.value.replace(/[^0-9.]/g, '')) || 0;
-    return sum + value;
-  }, 0);
+  const winProbabilityByStage: Record<RFPStage, number> = {
+    Discovery: 0.35,
+    Tech: 0.55,
+    Pricing: 0.65,
+    Approval: 0.72,
+    Final: 0.82,
+  };
+
+  const parseValueToMillions = (value: string) => {
+    const numeric = parseFloat(String(value).replace(/[^0-9.]/g, '')) || 0;
+    return numeric >= 100 ? numeric / 1000 : numeric;
+  };
   
   const activeRFPsCount = mockRFPs.length;
   const completedCount = mockRFPs.filter(rfp => rfp.waitingOn === 'completed').length;
@@ -36,15 +45,48 @@ const ManagementDashboard = () => {
 
   const owners = useMemo(() => Array.from(new Set(mockRFPs.map(rfp => rfp.owner))), []);
 
-  const daysUntil = (dateString: string) => {
+  const daysUntil = (dateString?: string) => {
+    if (!dateString) return Number.POSITIVE_INFINITY;
     const today = new Date();
     const target = new Date(dateString);
+    if (Number.isNaN(target.getTime())) return Number.POSITIVE_INFINITY;
     const diff = target.getTime() - today.getTime();
     return Math.ceil(diff / (1000 * 60 * 60 * 24));
   };
 
+  const computedRFPs = useMemo(() => {
+    const maxValue = Math.max(...mockRFPs.map((rfp) => parseValueToMillions(rfp.value)), 1);
+
+    return mockRFPs.map((rfp) => {
+      const days = daysUntil(rfp.deadlineDate);
+      const dealSize = parseValueToMillions(rfp.value);
+      const dealSizeScore = Math.min(dealSize / maxValue, 1);
+      const urgencyScore = Math.max(0, Math.min(1, (30 - Math.min(days, 30)) / 30));
+      const winProbability = winProbabilityByStage[rfp.currentStage] ?? 0.5;
+      const strategicImportance = Math.min(1, dealSizeScore * 0.6 + (rfp.riskFlag ? 0.4 : 0.2));
+      const priorityScore = Math.round(
+        (urgencyScore * 0.3 + dealSizeScore * 0.3 + winProbability * 0.25 + strategicImportance * 0.15) * 100
+      );
+
+      const quickWin = winProbability >= 0.65 && days <= 21 && dealSize <= 3 && !rfp.riskFlag;
+      const strategicBet = dealSize >= 3 && (rfp.riskFlag || winProbability < 0.65) && days <= 45;
+
+      return {
+        ...rfp,
+        priorityScore,
+        daysUntilDeadline: days,
+        winProbability,
+        dealSize,
+        quickWin,
+        strategicBet,
+      };
+    });
+  }, []);
+
+  const totalPipelineValue = computedRFPs.reduce((sum, rfp) => sum + rfp.dealSize, 0);
+
   const filteredRFPs = useMemo(() => {
-    let data = mockRFPs;
+    let data = computedRFPs;
 
     if (stageFilter !== 'all') {
       data = data.filter(rfp => rfp.currentStage === stageFilter);
@@ -52,10 +94,9 @@ const ManagementDashboard = () => {
 
     if (valueRange !== 'all') {
       data = data.filter(rfp => {
-        const numeric = parseFloat(String(rfp.value).replace(/[^0-9.]/g, '')) || 0;
-        if (valueRange === 'lt1') return numeric < 1;
-        if (valueRange === '1to3') return numeric >= 1 && numeric <= 3;
-        return numeric > 3;
+        if (valueRange === 'lt1') return rfp.dealSize < 1;
+        if (valueRange === '1to3') return rfp.dealSize >= 1 && rfp.dealSize <= 3;
+        return rfp.dealSize > 3;
       });
     }
 
@@ -75,11 +116,25 @@ const ManagementDashboard = () => {
       data = data.filter(rfp => rfp.riskFlag);
     }
 
+    if (focusFilter === 'quickWins') {
+      data = data.filter((rfp) => rfp.quickWin);
+    } else if (focusFilter === 'strategicBets') {
+      data = data.filter((rfp) => rfp.strategicBet);
+    }
+
+    data = data.sort((a, b) => b.priorityScore - a.priorityScore || a.daysUntilDeadline - b.daysUntilDeadline);
+
     return data;
-  }, [stageFilter, valueRange, urgency, ownerFilter, riskFilter]);
+  }, [stageFilter, valueRange, urgency, ownerFilter, riskFilter, focusFilter, computedRFPs]);
 
   const approachingDeadline = filteredRFPs.filter(rfp => daysUntil(rfp.deadlineDate) <= 7).length;
   const missingCompliance = filteredRFPs.filter(rfp => rfp.riskFlag).length;
+
+  const recommendedToday = useMemo(() => {
+    return filteredRFPs
+      .filter((rfp) => rfp.daysUntilDeadline <= 14 || rfp.quickWin)
+      .slice(0, 3);
+  }, [filteredRFPs]);
 
   const getStatusBadge = (waitingOn: UserRole | 'completed') => {
     if (waitingOn === 'completed') {
@@ -120,7 +175,7 @@ const ManagementDashboard = () => {
             <h3 className="text-sm font-medium text-slate-500">Total Pipeline Value</h3>
             <DollarSign size={20} className="text-teal-600" />
           </div>
-          <p className="text-3xl font-bold text-navy-900">${(totalPipelineValue / 1000).toFixed(1)}M</p>
+          <p className="text-3xl font-bold text-navy-900">${totalPipelineValue.toFixed(1)}M</p>
           <p className="text-xs text-slate-500 mt-1">Across all active RFPs</p>
         </div>
 
@@ -224,6 +279,42 @@ const ManagementDashboard = () => {
               ))}
             </select>
 
+            <div className="flex gap-2 items-center">
+              <button
+                type="button"
+                onClick={() => setFocusFilter('quickWins')}
+                className={`text-sm px-3 py-2 rounded-lg border transition duration-150 active:scale-[0.98] ${
+                  focusFilter === 'quickWins'
+                    ? 'bg-emerald-100 text-emerald-800 border-emerald-200'
+                    : 'bg-white text-slate-600 border-slate-200 hover:border-emerald-200'
+                }`}
+              >
+                Quick Wins
+              </button>
+              <button
+                type="button"
+                onClick={() => setFocusFilter('strategicBets')}
+                className={`text-sm px-3 py-2 rounded-lg border transition duration-150 active:scale-[0.98] ${
+                  focusFilter === 'strategicBets'
+                    ? 'bg-indigo-100 text-indigo-800 border-indigo-200'
+                    : 'bg-white text-slate-600 border-slate-200 hover:border-indigo-200'
+                }`}
+              >
+                Strategic Bets
+              </button>
+              <button
+                type="button"
+                onClick={() => setFocusFilter('all')}
+                className={`text-sm px-3 py-2 rounded-lg border transition duration-150 active:scale-[0.98] ${
+                  focusFilter === 'all'
+                    ? 'bg-slate-100 text-slate-800 border-slate-200'
+                    : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
+                }`}
+              >
+                Reset
+              </button>
+            </div>
+
             <button
               type="button"
               onClick={() => setRiskFilter(riskFilter === 'high' ? 'all' : 'high')}
@@ -245,6 +336,7 @@ const ManagementDashboard = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Client</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">RFP Title</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Value</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Priority Score</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Deadline</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Current Stage</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
@@ -263,6 +355,20 @@ const ManagementDashboard = () => {
                     <td className="px-6 py-4 whitespace-nowrap font-medium text-navy-900">{rfp.client}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-slate-600">{rfp.title}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-slate-700 font-medium">{rfp.value}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center gap-2">
+                        <div className="h-2 w-20 bg-slate-100 rounded-full overflow-hidden">
+                          <div
+                            className="h-2 rounded-full bg-gradient-to-r from-emerald-400 via-amber-400 to-rose-400"
+                            style={{ width: `${Math.min(rfp.priorityScore, 100)}%` }}
+                          />
+                        </div>
+                        <span className="text-sm font-semibold text-slate-800">{rfp.priorityScore}</span>
+                      </div>
+                      <p className="text-[11px] text-slate-500 mt-1">
+                        {rfp.quickWin ? 'Quick Win' : rfp.strategicBet ? 'Strategic Bet' : 'Balanced'}
+                      </p>
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-2">
                         <Clock size={14} className="text-amber-600" />
@@ -311,6 +417,36 @@ const ManagementDashboard = () => {
             <p className="text-sm font-semibold text-slate-800">AI Insights</p>
           </div>
           <div className="space-y-3 text-sm text-slate-700">
+            <div className="p-3 rounded-lg bg-sky-50 border border-sky-100">
+              <div className="flex items-center gap-2 mb-1">
+                <Sparkles size={16} className="text-sky-600" />
+                <p className="font-semibold text-sky-700">Recommended Action (today)</p>
+              </div>
+              {recommendedToday.length === 0 ? (
+                <p className="text-xs text-slate-600">No urgent items. Focus on pipeline hygiene.</p>
+              ) : (
+                <ul className="space-y-2">
+                  {recommendedToday.map((rfp) => (
+                    <li key={rfp.id} className="bg-white border border-slate-200 rounded-lg p-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-semibold text-slate-800">{rfp.client}</span>
+                        <span className="text-[11px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
+                          {rfp.priorityScore} pts
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-600">{rfp.title}</p>
+                      <div className="flex items-center gap-2 mt-1 text-[11px] text-slate-500">
+                        <Target size={12} />
+                        <span>{rfp.quickWin ? 'Quick Win' : 'Strategic Bet'}</span>
+                        <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700">
+                          due in {rfp.daysUntilDeadline === Number.POSITIVE_INFINITY ? '∞' : `${rfp.daysUntilDeadline}d`}
+                        </span>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
             <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-100">
               <p className="font-semibold text-emerald-700">{missingCompliance} RFPs missing compliance doc</p>
               <p className="text-xs text-emerald-800 mt-1">Flagged for follow-up.</p>

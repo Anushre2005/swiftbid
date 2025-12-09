@@ -137,6 +137,54 @@ const RFPDetail = () => {
       ? `${(rfp as any).profitMargin}%`
       : '18% (target)';
 
+  const competitorIntel = useMemo(() => {
+    const presets: Record<
+      string,
+      {
+        knownCompetitors: Array<{ name: string; winRate: number }>;
+        strengths: string[];
+        gaps: string[];
+      }
+    > = {
+      InfraCorp: {
+        knownCompetitors: [
+          { name: 'NetWave', winRate: 62 },
+          { name: 'FiberGrid', winRate: 55 },
+          { name: 'AxisCore', winRate: 48 },
+        ],
+        strengths: ['Faster deployment SLAs', 'Deep integration with legacy infra', 'Lower TCO in 3-year view'],
+        gaps: ['On-prem security certifications in progress', 'Fewer local delivery partners'],
+      },
+      'SwiftCorp Global': {
+        knownCompetitors: [
+          { name: 'CloudSpan', winRate: 58 },
+          { name: 'DataSphere', winRate: 50 },
+          { name: 'HelixEdge', winRate: 47 },
+        ],
+        strengths: ['Stronger migration playbooks', 'Proven uptime benchmarks', 'Competitive blended rate card'],
+        gaps: ['Limited Tier-3 DC coverage in APAC', 'Referenceable wins are mostly mid-market'],
+      },
+      default: {
+        knownCompetitors: [
+          { name: 'Competitor A', winRate: 54 },
+          { name: 'Competitor B', winRate: 49 },
+          { name: 'Competitor C', winRate: 46 },
+        ],
+        strengths: ['Responsive bid team', 'Configurable architecture', 'Transparent pricing envelopes'],
+        gaps: ['Need fresher case studies', 'Certifications pending on two regions'],
+      },
+    };
+
+    const picked = presets[rfp.client as keyof typeof presets] ?? presets.default;
+    const avgWinRate =
+      picked.knownCompetitors.reduce((sum, c) => sum + c.winRate, 0) / picked.knownCompetitors.length;
+
+    return {
+      ...picked,
+      avgWinRate: Math.round(avgWinRate),
+    };
+  }, [rfp.client]);
+
   const processTimeline = [
     {
       label: 'RFP ingested',
@@ -348,6 +396,55 @@ const RFPDetail = () => {
                       profile.
                     </li>
                   </ul>
+                </div>
+
+                {/* Competitive Intelligence */}
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Users size={18} className="text-slate-500" />
+                      <h3 className="text-lg font-bold text-slate-900">Competitive Intelligence</h3>
+                    </div>
+                    <span className="text-xs px-2.5 py-1 rounded-full bg-slate-100 text-slate-600">
+                      Est. win rate vs peers: {competitorIntel.avgWinRate}%
+                    </span>
+                  </div>
+
+                  <div>
+                    <p className="text-xs font-semibold text-slate-500 uppercase mb-2">Known competitors</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      {competitorIntel.knownCompetitors.map((c) => (
+                        <div key={c.name} className="p-3 rounded-lg border border-slate-200 bg-slate-50">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-semibold text-slate-900">{c.name}</span>
+                            <span className="text-[11px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">
+                              {c.winRate}% win
+                            </span>
+                          </div>
+                          <p className="text-xs text-slate-600 mt-1">Likely bidder in this segment.</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="p-4 rounded-lg border border-emerald-100 bg-emerald-50">
+                      <p className="text-xs font-semibold text-emerald-700 uppercase mb-2">Where we are stronger</p>
+                      <ul className="list-disc list-inside text-sm text-emerald-900 space-y-1">
+                        {competitorIntel.strengths.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="p-4 rounded-lg border border-amber-100 bg-amber-50">
+                      <p className="text-xs font-semibold text-amber-700 uppercase mb-2">Watchouts / weaker vs peers</p>
+                      <ul className="list-disc list-inside text-sm text-amber-900 space-y-1">
+                        {competitorIntel.gaps.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Change Requests Section (visible to Sales when RFP is in revision) */}
