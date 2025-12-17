@@ -3,7 +3,7 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { mockRFPs } from '../data/mockData';
 import StageProgressBar from '../components/shared/StageProgressBar';
-import { FileText, Clock } from 'lucide-react';
+import { FileText, Clock } from '@phosphor-icons/react';
 import type { RFPStatus } from '../types';
 
 const AllRFPsPage = () => {
@@ -77,7 +77,7 @@ const AllRFPsPage = () => {
   return (
     <div className="p-4 sm:p-6 lg:p-8 w-full overflow-x-hidden">
       <div className="flex items-center gap-3 mb-6">
-        <FileText size={24} className="sm:w-7 sm:h-7 text-navy-900" />
+        <FileText size={24} weight="duotone" className="sm:w-7 sm:h-7 text-navy-900" />
         <h1 className="text-xl sm:text-2xl font-bold text-navy-900">All RFPs</h1>
       </div>
 
@@ -130,7 +130,7 @@ const AllRFPsPage = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-slate-700 font-medium">{rfp.value}</td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-2">
-                        <Clock size={14} className="text-amber-600" />
+                        <Clock size={14} weight="duotone" className="text-amber-600" />
                         <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
                           {rfp.deadline}
                         </span>

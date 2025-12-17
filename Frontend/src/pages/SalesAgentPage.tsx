@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Bot, 
+  Robot, 
   Globe, 
   Plus, 
-  Trash2, 
-  RefreshCw, 
-  CheckCircle2, 
+  Trash, 
+  ArrowsClockwise, 
+  CheckCircle, 
   Clock, 
-  ExternalLink,
-  Search,
+  ArrowSquareOut,
+  MagnifyingGlass,
   Activity
-} from 'lucide-react';
+} from '@phosphor-icons/react';
 import StageProgressBar from '../components/shared/StageProgressBar';
 
 // Mock Data Types
@@ -177,7 +177,7 @@ const SalesAgentPage = () => {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 flex items-center gap-3">
-              <Bot className="text-indigo-600" size={32} />
+              <Robot className="text-indigo-600" size={32} weight="duotone" />
               Sales Agent Configuration
             </h1>
             <p className="text-slate-500 mt-1">
@@ -201,7 +201,7 @@ const SalesAgentPage = () => {
             {/* Add Source Card */}
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
               <h2 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
-                <Globe size={18} className="text-slate-500" />
+                <Globe size={18} weight="duotone" className="text-slate-500" />
                 Add New Source
               </h2>
               <form onSubmit={handleAddSource} className="space-y-4">
@@ -231,7 +231,7 @@ const SalesAgentPage = () => {
                   className="w-full bg-indigo-600 text-white py-2.5 rounded-lg hover:bg-indigo-700 active:bg-indigo-800 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold shadow-sm hover:shadow-md mt-2"
                 >
                   <div className="flex items-center justify-center gap-2">
-                    <Plus size={18} />
+                    <Plus size={18} weight="duotone" />
                     <span>Add Source</span>
                   </div>
                 </button>
@@ -256,7 +256,7 @@ const SalesAgentPage = () => {
                         onClick={() => handleDeleteSource(source.id)}
                         className="text-slate-400 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity"
                       >
-                        <Trash2 size={14} />
+                        <Trash size={14} weight="duotone" />
                       </button>
                     </div>
                     <a href={source.url} target="_blank" rel="noopener noreferrer" className="text-xs text-indigo-600 hover:underline truncate block mb-2">
@@ -266,12 +266,12 @@ const SalesAgentPage = () => {
                       <div className="flex items-center gap-1.5 text-slate-500">
                         {source.status === 'scanning' ? (
                           <>
-                            <RefreshCw size={12} className="animate-spin text-emerald-500" />
+                            <ArrowsClockwise size={12} weight="duotone" className="animate-spin text-emerald-500" />
                             <span className="text-emerald-600 font-medium">Scanning...</span>
                           </>
                         ) : (
                           <>
-                            <Clock size={12} />
+                            <Clock size={12} weight="duotone" />
                             <span>{source.lastScanned}</span>
                           </>
                         )}
@@ -318,7 +318,7 @@ const SalesAgentPage = () => {
                   <p className="text-sm text-slate-500">Real-time opportunities identified by the Sales Agent.</p>
                 </div>
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                  <MagnifyingGlass weight="duotone" className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                   <input 
                     type="text" 
                     placeholder="Search feed..." 
@@ -345,7 +345,7 @@ const SalesAgentPage = () => {
                         <td className="px-6 py-4">
                           <div className="font-medium text-slate-900 text-sm mb-0.5">{rfp.title}</div>
                           <div className="text-xs text-slate-500 flex items-center gap-1">
-                            <Clock size={10} />
+                            <Clock size={10} weight="duotone" />
                             Found: {rfp.discoveredAt}
                           </div>
                         </td>
@@ -382,7 +382,7 @@ const SalesAgentPage = () => {
                               className="text-indigo-600 hover:text-indigo-800 text-xs font-medium flex items-center gap-1 hover:underline"
                             >
                               View Details
-                              <ExternalLink size={12} />
+                              <ArrowSquareOut size={12} weight="duotone" />
                             </button>
                           )}
                         </td>

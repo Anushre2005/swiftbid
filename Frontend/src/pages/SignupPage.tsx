@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import type { UserRole } from '../types';
-import { Building2, Mail, Lock, User, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Buildings, Envelope, LockKey, User, WarningCircle, CheckCircle } from '@phosphor-icons/react';
 
 const SignupPage = () => {
   const [name, setName] = useState('');
@@ -65,20 +65,20 @@ const SignupPage = () => {
       <div className="hidden lg:flex lg:w-1/2 bg-slate-900 items-center justify-center relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 to-slate-800 opacity-90"></div>
         <div className="relative z-10 text-white text-center p-12">
-          <Building2 size={64} className="mx-auto mb-6 text-amber-500" />
+          <Buildings size={64} weight="duotone" className="mx-auto mb-6 text-amber-500" />
           <h1 className="text-5xl font-bold mb-4">SwiftBid AI</h1>
           <p className="text-xl text-slate-300">Accelerating B2B Tenders</p>
           <div className="mt-8 space-y-3 text-left max-w-md mx-auto">
             <div className="flex items-center gap-3 text-slate-200">
-              <CheckCircle2 size={20} className="text-amber-500" />
+              <CheckCircle size={20} weight="duotone" className="text-amber-500" />
               <span>Streamlined RFP management</span>
             </div>
             <div className="flex items-center gap-3 text-slate-200">
-              <CheckCircle2 size={20} className="text-amber-500" />
+              <CheckCircle size={20} weight="duotone" className="text-amber-500" />
               <span>AI-powered insights</span>
             </div>
             <div className="flex items-center gap-3 text-slate-200">
-              <CheckCircle2 size={20} className="text-amber-500" />
+              <CheckCircle size={20} weight="duotone" className="text-amber-500" />
               <span>Collaborative workflows</span>
             </div>
           </div>
@@ -95,7 +95,7 @@ const SignupPage = () => {
 
           {error && (
             <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-red-700 text-sm">
-              <AlertCircle size={16} />
+              <WarningCircle size={16} weight="duotone" />
               <span>{error}</span>
             </div>
           )}
@@ -108,6 +108,7 @@ const SignupPage = () => {
               <div className="relative">
                 <User
                   size={18}
+                  weight="duotone"
                   className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"
                 />
                 <input
@@ -126,8 +127,9 @@ const SignupPage = () => {
                 Email Address
               </label>
               <div className="relative">
-                <Mail
+                <Envelope
                   size={18}
+                  weight="duotone"
                   className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"
                 />
                 <input
@@ -166,8 +168,9 @@ const SignupPage = () => {
                 Password
               </label>
               <div className="relative">
-                <Lock
+                <LockKey
                   size={18}
+                  weight="duotone"
                   className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"
                 />
                 <input
@@ -187,8 +190,9 @@ const SignupPage = () => {
                 Confirm Password
               </label>
               <div className="relative">
-                <Lock
+                <LockKey
                   size={18}
+                  weight="duotone"
                   className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"
                 />
                 <input

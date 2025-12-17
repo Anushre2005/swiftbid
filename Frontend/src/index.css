@@ -1,13 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
 @import 'tailwindcss';
 
 /* Prevent horizontal scrolling */
-html, body {
+html,
+body {
     overflow-x: hidden;
     max-width: 100vw;
 }
 
 body {
-    @apply bg-slate-50 text-slate-900;
+    @apply bg-slate-50 text-slate-900 font-sans;
+    font-family: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 }
 
 /* Ensure all containers respect viewport width */
@@ -17,12 +21,15 @@ body {
 
 /* Hide scrollbars but keep functionality */
 .scrollbar-hide {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-    display: none;  /* Chrome, Safari and Opera */
+    display: none;
+    /* Chrome, Safari and Opera */
 }
 
 /* Hide all scrollbars globally */
@@ -31,8 +38,10 @@ body {
 }
 
 * {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
 }
 
 /* Override any conflicting styles for buttons */
@@ -61,7 +70,7 @@ form button {
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255,255,255,0.4), transparent 45%);
+    background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255, 255, 255, 0.4), transparent 45%);
     opacity: 0;
     transform: scale(0.8);
     transition: opacity 180ms ease, transform 180ms ease;
@@ -71,4 +80,48 @@ form button {
     opacity: 1;
     transform: scale(1.15);
     transition: none;
+}
+
+/* --- CUSTOM LANDING PAGE ANIMATIONS --- */
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+/* Custom 3D transforms that match the class names used in LandingPage.tsx */
+.rotate-y-\[-5deg\] {
+  transform: rotateY(-5deg);
+}
+.rotate-x-\[5deg\] {
+  transform: rotateX(5deg);
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+@keyframes blob {
+  0% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
 }

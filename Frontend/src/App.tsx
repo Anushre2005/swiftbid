@@ -9,6 +9,7 @@ import SpecialistInbox from './pages/SpecialistInbox';
 import RFPDetail from './pages/RFPDetail';
 import AllRFPsPage from './pages/AllRFPsPage';
 import SalesAgentPage from './pages/SalesAgentPage';
+import LandingPage from './pages/LandingPage';
 import { useAuth } from './context/AuthContext';
 import { AuthProvider } from './context/AuthContext';
 
@@ -27,11 +28,9 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 function AppRoutes() {
   return (
     <Routes>
+      <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
-      
-      {/* Default redirect to login */}
-      <Route path="/" element={<Navigate to="/login" replace />} />
 
       {/* Protected Routes inside the App Layout */}
       <Route
@@ -48,7 +47,7 @@ function AppRoutes() {
         <Route path="/rfp/:id" element={<RFPDetail />} />
         <Route path="/sales-agent" element={<SalesAgentPage />} />
       </Route>
-      
+
       {/* Catch all - redirect to login */}
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
@@ -56,9 +55,11 @@ function AppRoutes() {
 }
 
 function App() {
+  const basename = import.meta.env.PROD ? '/swiftbid' : '/';
+
   return (
     <AuthProvider>
-      <BrowserRouter>
+      <BrowserRouter basename={basename}>
         <AppRoutes />
       </BrowserRouter>
     </AuthProvider>
@@ -70,7 +71,7 @@ if (typeof window !== 'undefined') {
   window.addEventListener('error', (e) => {
     console.error('Global error:', e.error);
   });
-  
+
   window.addEventListener('unhandledrejection', (e) => {
     console.error('Unhandled promise rejection:', e.reason);
   });

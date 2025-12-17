@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import type { UserRole } from '../types';
-import { Building2, Mail, Lock, AlertCircle } from 'lucide-react';
+import { Buildings, Envelope, LockKey, WarningCircle } from '@phosphor-icons/react';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -53,7 +53,7 @@ const LoginPage = () => {
         {/* gradient updated to Tailwind default colors */}
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 to-slate-800 opacity-90"></div>
         <div className="relative z-10 text-white text-center p-12">
-          <Building2 size={64} className="mx-auto mb-6 text-amber-500" />
+          <Buildings size={64} weight="duotone" className="mx-auto mb-6 text-amber-500" />
           <h1 className="text-5xl font-bold mb-4">SwiftBid AI</h1>
           <p className="text-xl text-slate-300">Accelerating B2B Tenders</p>
         </div>
@@ -70,7 +70,7 @@ const LoginPage = () => {
           
           {error && (
             <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-red-700 text-sm">
-              <AlertCircle size={16} />
+              <WarningCircle size={16} weight="duotone" />
               <span>{error}</span>
             </div>
           )}
@@ -81,8 +81,9 @@ const LoginPage = () => {
                 Email Address
               </label>
               <div className="relative">
-                <Mail
+                <Envelope
                   size={18}
+                  weight="duotone"
                   className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"
                 />
                 <input
@@ -101,8 +102,9 @@ const LoginPage = () => {
                 Password
               </label>
               <div className="relative">
-                <Lock
+                <LockKey
                   size={18}
+                  weight="duotone"
                   className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"
                 />
                 <input

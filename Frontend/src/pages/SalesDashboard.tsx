@@ -4,14 +4,14 @@ import { mockRFPs } from '../data/mockData';
 import StageProgressBar from '../components/shared/StageProgressBar';
 import { ChatbotPopup, FloatingChatbotButton } from './SpecialistInbox';
 import {
-  TrendingUp,
+  TrendUp,
   Clock,
-  DollarSign,
-  Activity,
-  ListFilter,
-  Sparkles,
+  CurrencyInr,
+  ChartLineUp,
+  Funnel,
+  Sparkle,
   Target,
-} from 'lucide-react';
+} from '@phosphor-icons/react';
 import type { UserRole, RFPStage } from '../types';
 
 // Get status badge color
@@ -105,7 +105,7 @@ const SalesDashboard = () => {
       const strategicImportance = Math.min(1, dealSizeScore * 0.6 + (rfp.riskFlag ? 0.4 : 0.2));
       const priorityScore = Math.round(
         (urgencyScore * 0.3 + dealSizeScore * 0.3 + winProbability * 0.25 + strategicImportance * 0.15) *
-          100
+        100
       );
 
       const quickWin =
@@ -222,43 +222,43 @@ const SalesDashboard = () => {
                 </p>
               </div>
             </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
-          <div className="bg-white p-5 rounded-xl shadow-md shadow-slate-100 border border-slate-200 flex flex-col h-full transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-xs font-medium text-slate-600 uppercase">Active RFPs</h3>
-              <Activity size={20} className="text-indigo-600" />
-            </div>
-            <p className="text-3xl font-bold">{activeRFPsCount}</p>
-          </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
+              <div className="bg-white p-5 rounded-xl shadow-md shadow-slate-100 border border-slate-200 flex flex-col h-full transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-xs font-medium text-slate-600 uppercase">Active RFPs</h3>
+                  <ChartLineUp size={20} weight="duotone" className="text-indigo-600" />
+                </div>
+                <p className="text-3xl font-bold">{activeRFPsCount}</p>
+              </div>
 
-          <div className="bg-white p-5 rounded-xl shadow-md shadow-slate-100 border border-slate-200 flex flex-col h-full transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-xs font-medium text-slate-600 uppercase">Pipeline Value</h3>
-              <DollarSign size={20} className="text-emerald-600" />
-            </div>
-            <p className="text-3xl font-bold">₹{totalPipelineValue.toFixed(1)} Cr</p>
-          </div>
+              <div className="bg-white p-5 rounded-xl shadow-md shadow-slate-100 border border-slate-200 flex flex-col h-full transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-xs font-medium text-slate-600 uppercase">Pipeline Value</h3>
+                  <CurrencyInr size={20} weight="duotone" className="text-emerald-600" />
+                </div>
+                <p className="text-3xl font-bold">₹{totalPipelineValue.toFixed(1)} Cr</p>
+              </div>
 
-          <div className="bg-white p-5 rounded-xl shadow-md shadow-slate-100 border border-slate-200 flex flex-col h-full transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-xs font-medium text-slate-600 uppercase">Win Rate</h3>
-              <TrendingUp size={20} className="text-blue-600" />
-            </div>
-            <p className="text-3xl font-bold">68%</p>
-          </div>
+              <div className="bg-white p-5 rounded-xl shadow-md shadow-slate-100 border border-slate-200 flex flex-col h-full transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-xs font-medium text-slate-600 uppercase">Win Rate</h3>
+                  <TrendUp size={20} weight="duotone" className="text-blue-600" />
+                </div>
+                <p className="text-3xl font-bold">68%</p>
+              </div>
 
-          <div className="bg-white p-5 rounded-xl shadow-md shadow-slate-100 border border-slate-200 flex flex-col h-full transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-xs font-medium text-slate-600 uppercase">Avg Response Time</h3>
-              <Clock size={20} className="text-amber-600" />
+              <div className="bg-white p-5 rounded-xl shadow-md shadow-slate-100 border border-slate-200 flex flex-col h-full transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-xs font-medium text-slate-600 uppercase">Avg Response Time</h3>
+                  <Clock size={20} weight="duotone" className="text-amber-600" />
+                </div>
+                <p className="text-3xl font-bold">45 Mins</p>
+              </div>
             </div>
-            <p className="text-3xl font-bold">45 Mins</p>
-          </div>
-        </div>
             <div className="bg-white shadow-sm rounded-xl border border-slate-200 overflow-hidden">
               <div className="px-6 py-4 border-b border-slate-200 flex items-start gap-3">
                 <div className="mt-1 rounded-lg bg-slate-100 p-2 text-slate-600">
-                  <ListFilter size={18} />
+                  <Funnel size={18} weight="duotone" />
                 </div>
                 <div className="flex flex-col">
                   <span className="font-semibold text-sm">{filteredRFPs.length} Opportunities</span>
@@ -266,100 +266,96 @@ const SalesDashboard = () => {
                 </div>
               </div>
 
-          <div className="px-6 py-4 flex flex-wrap items-center gap-3 bg-slate-50 border-b border-slate-200">
-            <select
-              className="text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white shadow-sm focus:ring-2 focus:ring-teal-200 focus:outline-none"
-              value={stageFilter}
-              onChange={(e) => setStageFilter(e.target.value as typeof stageFilter)}
-            >
-              <option value="all">All stages</option>
-              <option value="Discovery">Discovery</option>
-              <option value="Tech">Tech</option>
-              <option value="Pricing">Pricing</option>
-              <option value="Approval">Approval</option>
-              <option value="Final">Final</option>
-            </select>
+              <div className="px-6 py-4 flex flex-wrap items-center gap-3 bg-slate-50 border-b border-slate-200">
+                <select
+                  className="text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white shadow-sm focus:ring-2 focus:ring-teal-200 focus:outline-none"
+                  value={stageFilter}
+                  onChange={(e) => setStageFilter(e.target.value as typeof stageFilter)}
+                >
+                  <option value="all">All stages</option>
+                  <option value="Discovery">Discovery</option>
+                  <option value="Tech">Tech</option>
+                  <option value="Pricing">Pricing</option>
+                  <option value="Approval">Approval</option>
+                  <option value="Final">Final</option>
+                </select>
 
-            <select
-              className="text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white shadow-sm focus:ring-2 focus:ring-teal-200 focus:outline-none"
-              value={valueRange}
-              onChange={(e) => setValueRange(e.target.value as typeof valueRange)}
-            >
-              <option value="all">All values</option>
-              <option value="lt1">&lt; ₹1 Cr</option>
-              <option value="1to10">₹1 Cr - ₹10 Cr</option>
-              <option value="gt10">&gt; ₹10 Cr</option>
-            </select>
+                <select
+                  className="text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white shadow-sm focus:ring-2 focus:ring-teal-200 focus:outline-none"
+                  value={valueRange}
+                  onChange={(e) => setValueRange(e.target.value as typeof valueRange)}
+                >
+                  <option value="all">All values</option>
+                  <option value="lt1">&lt; ₹1 Cr</option>
+                  <option value="1to10">₹1 Cr - ₹10 Cr</option>
+                  <option value="gt10">&gt; ₹10 Cr</option>
+                </select>
 
-            <select
-              className="text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white shadow-sm focus:ring-2 focus:ring-teal-200 focus:outline-none"
-              value={urgency}
-              onChange={(e) => setUrgency(e.target.value as typeof urgency)}
-            >
-              <option value="all">Any deadline</option>
-              <option value="soon">Due in 7 days</option>
-              <option value="month">Due in 30 days</option>
-            </select>
+                <select
+                  className="text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white shadow-sm focus:ring-2 focus:ring-teal-200 focus:outline-none"
+                  value={urgency}
+                  onChange={(e) => setUrgency(e.target.value as typeof urgency)}
+                >
+                  <option value="all">Any deadline</option>
+                  <option value="soon">Due in 7 days</option>
+                  <option value="month">Due in 30 days</option>
+                </select>
 
-            <select
-              className="text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white shadow-sm focus:ring-2 focus:ring-teal-200 focus:outline-none"
-              value={ownerFilter}
-              onChange={(e) => setOwnerFilter(e.target.value as typeof ownerFilter)}
-            >
-              <option value="all">All owners</option>
-              {owners.map((owner) => (
-                <option key={owner} value={owner}>{owner}</option>
-              ))}
-            </select>
+                <select
+                  className="text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white shadow-sm focus:ring-2 focus:ring-teal-200 focus:outline-none"
+                  value={ownerFilter}
+                  onChange={(e) => setOwnerFilter(e.target.value as typeof ownerFilter)}
+                >
+                  <option value="all">All owners</option>
+                  {owners.map((owner) => (
+                    <option key={owner} value={owner}>{owner}</option>
+                  ))}
+                </select>
 
-            <div className="flex gap-2 items-center">
-              <button
-                type="button"
-                onClick={() => setFocusFilter('quickWins')}
-                className={`text-sm px-3 py-2 rounded-lg border transition duration-150 active:scale-[0.99] ${
-                  focusFilter === 'quickWins'
-                    ? 'bg-emerald-100 text-emerald-800 border-emerald-200'
-                    : 'bg-white text-slate-600 border-slate-200 hover:border-emerald-200'
-                }`}
-              >
-                Quick Wins
-              </button>
-              <button
-                type="button"
-                onClick={() => setFocusFilter('strategicBets')}
-                className={`text-sm px-3 py-2 rounded-lg border transition duration-150 active:scale-[0.99] ${
-                  focusFilter === 'strategicBets'
-                    ? 'bg-indigo-100 text-indigo-800 border-indigo-200'
-                    : 'bg-white text-slate-600 border-slate-200 hover:border-indigo-200'
-                }`}
-              >
-                Strategic Bets
-              </button>
-              <button
-                type="button"
-                onClick={() => setFocusFilter('all')}
-                className={`text-sm px-3 py-2 rounded-lg border transition duration-150 active:scale-[0.99] ${
-                  focusFilter === 'all'
-                    ? 'bg-slate-100 text-slate-800 border-slate-200'
-                    : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
-                }`}
-              >
-                Reset
-              </button>
-            </div>
+                <div className="flex gap-2 items-center">
+                  <button
+                    type="button"
+                    onClick={() => setFocusFilter('quickWins')}
+                    className={`text-sm px-3 py-2 rounded-lg border transition duration-150 active:scale-[0.99] ${focusFilter === 'quickWins'
+                      ? 'bg-emerald-100 text-emerald-800 border-emerald-200'
+                      : 'bg-white text-slate-600 border-slate-200 hover:border-emerald-200'
+                      }`}
+                  >
+                    Quick Wins
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFocusFilter('strategicBets')}
+                    className={`text-sm px-3 py-2 rounded-lg border transition duration-150 active:scale-[0.99] ${focusFilter === 'strategicBets'
+                      ? 'bg-indigo-100 text-indigo-800 border-indigo-200'
+                      : 'bg-white text-slate-600 border-slate-200 hover:border-indigo-200'
+                      }`}
+                  >
+                    Strategic Bets
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFocusFilter('all')}
+                    className={`text-sm px-3 py-2 rounded-lg border transition duration-150 active:scale-[0.99] ${focusFilter === 'all'
+                      ? 'bg-slate-100 text-slate-800 border-slate-200'
+                      : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
+                      }`}
+                  >
+                    Reset
+                  </button>
+                </div>
 
-            <button
-              type="button"
-              onClick={() => setRiskFilter(riskFilter === 'high' ? 'all' : 'high')}
-              className={`text-sm px-3 py-2 rounded-lg border transition duration-150 active:scale-[0.99] ${
-                riskFilter === 'high'
-                  ? 'bg-amber-100 text-amber-700 border-amber-200'
-                  : 'bg-white text-slate-600 border-slate-200 hover:border-amber-200'
-              }`}
-            >
-              {riskFilter === 'high' ? 'High risk only' : 'Include risk'}
-            </button>
-          </div>
+                <button
+                  type="button"
+                  onClick={() => setRiskFilter(riskFilter === 'high' ? 'all' : 'high')}
+                  className={`text-sm px-3 py-2 rounded-lg border transition duration-150 active:scale-[0.99] ${riskFilter === 'high'
+                    ? 'bg-amber-100 text-amber-700 border-amber-200'
+                    : 'bg-white text-slate-600 border-slate-200 hover:border-amber-200'
+                    }`}
+                >
+                  {riskFilter === 'high' ? 'High risk only' : 'Include risk'}
+                </button>
+              </div>
 
               <div className="overflow-x-auto">
                 <table className="min-w-full border-separate border-spacing-y-2">
@@ -425,7 +421,7 @@ const SalesDashboard = () => {
 
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center gap-2">
-                            <Clock size={14} className="text-amber-600" />
+                            <Clock size={14} weight="duotone" className="text-amber-600" />
                             <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
                               {rfp.deadline}
                             </span>
@@ -457,7 +453,7 @@ const SalesDashboard = () => {
             <div className="space-y-3 text-sm text-slate-700">
               <div className="p-3 rounded-lg bg-sky-50 border border-sky-100">
                 <div className="flex items-center gap-2 mb-1">
-                  <Sparkles size={16} className="text-sky-600" />
+                  <Sparkle size={16} weight="duotone" className="text-sky-600" />
                   <p className="font-semibold text-sky-700">Recommended Action (today)</p>
                 </div>
                 {recommendedToday.length === 0 ? (
@@ -474,7 +470,7 @@ const SalesDashboard = () => {
                         </div>
                         <p className="text-xs text-slate-600">{rfp.title}</p>
                         <div className="flex items-center gap-2 mt-1 text-[11px] text-slate-500">
-                          <Target size={12} />
+                          <Target size={12} weight="duotone" />
                           <span>{rfp.quickWin ? 'Quick Win' : 'Strategic Bet'}</span>
                           <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700">
                             due in {rfp.daysUntilDeadline === Number.POSITIVE_INFINITY ? '∞' : `${rfp.daysUntilDeadline}d`}

@@ -1,10 +1,9 @@
 // src/pages/SpecialistInbox.tsx
 import React, { useState } from 'react';
 import { mockRFPs } from '../data/mockData';
-import { MessageCircle } from 'lucide-react';
+import { ChatCircleDots, CheckCircle, Clock, X, PaperPlaneRight } from '@phosphor-icons/react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { CheckCircle2, Clock } from 'lucide-react';
 
 const SpecialistInbox = () => {
   const { role } = useAuth();
@@ -49,7 +48,7 @@ const SpecialistInbox = () => {
                             </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap flex items-center gap-2 text-amber-600 font-medium">
-                            <Clock size={16} />
+                            <Clock size={16} weight="duotone" />
                             <span>Ready for {rfp.currentStage} Review</span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -67,7 +66,7 @@ const SpecialistInbox = () => {
                     // Empty state message
                     <tr>
                         <td colSpan={5} className="px-6 py-12 text-center text-slate-500 flex flex-col items-center justify-center gap-3">
-                            <CheckCircle2 size={48} className="text-teal-500" />
+                            <CheckCircle size={48} weight="duotone" className="text-teal-500" />
                             <p className="text-lg font-medium">All caught up!</p>
                             <p className="text-sm">No pending approvals for the {roleTitle}.</p>
                         </td>
@@ -195,13 +194,13 @@ const ChatbotPopup = ({ open, onClose }: { open: boolean; onClose: () => void })
         <div className="flex items-center justify-between px-6 py-4 bg-slate-900 text-white shadow-sm">
           <span className="font-semibold text-lg flex items-center gap-2.5">
             <div className="p-1.5 bg-indigo-500/20 rounded-lg">
-              <MessageCircle size={20} className="text-indigo-400" />
+              <ChatCircleDots size={20} weight="duotone" className="text-indigo-400" />
             </div>
             SwiftBid Assistant
           </span>
           <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors p-1 hover:bg-slate-800 rounded-full">
             <span className="sr-only">Close</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            <X size={20} weight="duotone" />
           </button>
         </div>
         
@@ -260,7 +259,7 @@ const ChatbotPopup = ({ open, onClose }: { open: boolean; onClose: () => void })
                                 <td className="px-4 py-3 font-medium text-slate-800">{row.value}</td>
                                 <td className="px-4 py-3 text-slate-500 whitespace-nowrap">
                                     <div className="flex items-center gap-1.5">
-                                        <Clock size={12} className="text-amber-500"/>
+                                        <Clock size={12} weight="duotone" className="text-amber-500"/>
                                         {row.deadline}
                                     </div>
                                 </td>
@@ -298,9 +297,7 @@ const ChatbotPopup = ({ open, onClose }: { open: boolean; onClose: () => void })
               className={`bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white p-3 rounded-xl transition-all shadow-sm hover:shadow ${thinking ? 'cursor-not-allowed opacity-70' : ''}`} 
               disabled={thinking}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-                <path d="M3.105 2.289a.75.75 0 0 0-.826.95l1.414 4.925A1.5 1.5 0 0 0 5.135 9.25h6.115a.75.75 0 0 1 0 1.5H5.135a1.5 1.5 0 0 0-1.442 1.086l-1.414 4.926a.75.75 0 0 0 .826.95 28.896 28.896 0 0 0 15.293-7.154.75.75 0 0 0 0-1.115A28.897 28.897 0 0 0 3.105 2.289Z" />
-              </svg>
+              <PaperPlaneRight size={20} weight="duotone" />
             </button>
           </form>
           <div className="text-center mt-2">
@@ -325,7 +322,7 @@ const FloatingChatbotButton = ({ onClick }: { onClick: () => void }) => (
     className="fixed z-50 bottom-8 right-8 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-lg shadow-indigo-600/30 p-4 flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 border-4 border-white ring-1 ring-slate-100"
     aria-label="Open Chatbot"
   >
-    <MessageCircle size={28} />
+    <ChatCircleDots size={28} weight="duotone" />
   </button>
 );
 

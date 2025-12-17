@@ -9,7 +9,7 @@ export default {
         teal: { 600: '#0d9488' }, // Success
         slate: { 50: '#f8fafc', 100: '#f1f599', 200: '#e2e8f0', 500: '#64748b', 900: '#0f172a' } // Grays
       },
-      fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+      fontFamily: { sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'] }
     },
   },
   plugins: [],

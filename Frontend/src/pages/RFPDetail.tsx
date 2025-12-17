@@ -4,17 +4,17 @@ import { useParams } from 'react-router-dom';
 import { mockRFPs } from '../data/mockData';
 import { useAuth } from '../context/AuthContext';
 import {
-  AlertTriangle,
+  Warning,
   FileText,
   X,
   Users,
-  DollarSign,
+  CurrencyInr,
   Clock,
-  CheckCircle2,
-  Send,
-  MessageSquare,
-  Download,
-} from 'lucide-react';
+  CheckCircle,
+  PaperPlaneRight,
+  ChatCircleDots,
+  DownloadSimple,
+} from '@phosphor-icons/react';
 
 // --- MOCKED LOCAL DATA FOR DEMO (Asian Paints Context) ---
 
@@ -101,7 +101,7 @@ const RFPDetail = () => {
     effect: '',
     howItMatters: '',
   });
-  
+
   const loadChangeRequests = () => {
     try {
       const stored = localStorage.getItem(`rfp-${id}-change-requests`);
@@ -110,8 +110,8 @@ const RFPDetail = () => {
       return [];
     }
   };
-  
-  const [changeRequests, setChangeRequests] = useState<Array<{ 
+
+  const [changeRequests, setChangeRequests] = useState<Array<{
     id: string;
     requestedBy: string;
     timestamp: string;
@@ -121,9 +121,9 @@ const RFPDetail = () => {
     howItMatters: string;
     status: 'pending' | 'revised' | 'approved';
   }>>(() => loadChangeRequests());
-  
+
   const isInRevision = changeRequests.some(req => req.status === 'pending');
-  
+
   const loadComments = (key: string) => {
     try {
       const stored = localStorage.getItem(key);
@@ -133,7 +133,7 @@ const RFPDetail = () => {
     }
   };
 
-  const saveComments = (key: string, comments: Array<{id: string; text: string; timestamp: string}>) => {
+  const saveComments = (key: string, comments: Array<{ id: string; text: string; timestamp: string }>) => {
     try {
       localStorage.setItem(key, JSON.stringify(comments));
     } catch (error) {
@@ -141,10 +141,10 @@ const RFPDetail = () => {
     }
   };
 
-  const [techComments, setTechComments] = useState<Array<{id: string; text: string; timestamp: string}>>(() => 
+  const [techComments, setTechComments] = useState<Array<{ id: string; text: string; timestamp: string }>>(() =>
     loadComments(`rfp-${id}-tech-comments`)
   );
-  const [pricingComments, setPricingComments] = useState<Array<{id: string; text: string; timestamp: string}>>(() => 
+  const [pricingComments, setPricingComments] = useState<Array<{ id: string; text: string; timestamp: string }>>(() =>
     loadComments(`rfp-${id}-pricing-comments`)
   );
   const [newTechComment, setNewTechComment] = useState('');
@@ -176,7 +176,7 @@ const RFPDetail = () => {
   const isPricing = role === 'pricing';
 
   // --- DYNAMIC SUMMARY LOGIC BASED ON CLIENT ---
-  
+
   const getSummaryContent = (clientName: string) => {
     if (clientName === 'SDSC SHAR') {
       return {
@@ -368,7 +368,7 @@ const RFPDetail = () => {
                 Deadline
               </h3>
               <div className="flex items-center gap-2 text-amber-700 font-medium bg-amber-50 px-3 py-2 rounded-md">
-                <AlertTriangle size={18} />
+                <Warning size={18} weight="duotone" />
                 <span>{rfp.deadline} (4 days left)</span>
               </div>
             </div>
@@ -378,7 +378,7 @@ const RFPDetail = () => {
                 Source
               </h3>
               <div className="flex items-center gap-2 text-slate-700">
-                <FileText size={18} />
+                <FileText size={18} weight="duotone" />
                 <span className="truncate">{rfp.source}</span>
               </div>
             </div>
@@ -420,9 +420,9 @@ const RFPDetail = () => {
                   }}
                   className="w-full flex items-center gap-2 px-3 py-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition-colors text-sm font-medium text-slate-700"
                 >
-                  <FileText size={16} className="text-slate-600" />
+                  <FileText size={16} weight="duotone" className="text-slate-600" />
                   <span className="flex-1 text-left">Original Tender PDF</span>
-                  <Download size={14} className="text-slate-500" />
+                  <DownloadSimple size={14} weight="duotone" className="text-slate-500" />
                 </button>
                 <button
                   onClick={() => {
@@ -430,9 +430,9 @@ const RFPDetail = () => {
                   }}
                   className="w-full flex items-center gap-2 px-3 py-2.5 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-lg transition-colors text-sm font-medium text-indigo-700"
                 >
-                  <FileText size={16} className="text-indigo-600" />
+                  <FileText size={16} weight="duotone" className="text-indigo-600" />
                   <span className="flex-1 text-left">Price Bid (Annex-VI)</span>
-                  <Download size={14} className="text-indigo-500" />
+                  <DownloadSimple size={14} weight="duotone" className="text-indigo-500" />
                 </button>
               </div>
             </div>
@@ -445,41 +445,37 @@ const RFPDetail = () => {
           <div className="flex border-b border-slate-200 mb-6">
             <button
               onClick={() => setActiveTab('summary')}
-              className={`px-6 py-3 font-medium text-sm border-b-2 -mb-px transition-colors ${ 
-                activeTab === 'summary'
+              className={`px-6 py-3 font-medium text-sm border-b-2 -mb-px transition-colors ${activeTab === 'summary'
                   ? 'border-slate-900 text-slate-900'
                   : 'border-transparent text-slate-500 hover:text-slate-900'
-              }`}
+                }`}
             >
               Summary
             </button>
             <button
               onClick={() => setActiveTab('tech')}
-              className={`px-6 py-3 font-medium text-sm border-b-2 -mb-px transition-colors ${ 
-                activeTab === 'tech'
+              className={`px-6 py-3 font-medium text-sm border-b-2 -mb-px transition-colors ${activeTab === 'tech'
                   ? 'border-slate-900 text-slate-900'
                   : 'border-transparent text-slate-500 hover:text-slate-900'
-              }`}
+                }`}
             >
               Tech Match
             </button>
             <button
               onClick={() => setActiveTab('pricing')}
-              className={`px-6 py-3 font-medium text-sm border-b-2 -mb-px transition-colors ${ 
-                activeTab === 'pricing'
+              className={`px-6 py-3 font-medium text-sm border-b-2 -mb-px transition-colors ${activeTab === 'pricing'
                   ? 'border-slate-900 text-slate-900'
                   : 'border-transparent text-slate-500 hover:text-slate-900'
-              }`}
+                }`}
             >
               Pricing
             </button>
             <button
               onClick={() => setActiveTab('compliance')}
-              className={`px-6 py-3 font-medium text-sm border-b-2 -mb-px transition-colors ${ 
-                activeTab === 'compliance'
+              className={`px-6 py-3 font-medium text-sm border-b-2 -mb-px transition-colors ${activeTab === 'compliance'
                   ? 'border-slate-900 text-slate-900'
                   : 'border-transparent text-slate-500 hover:text-slate-900'
-              }`}
+                }`}
             >
               Compliance & Logistics
             </button>
@@ -493,7 +489,7 @@ const RFPDetail = () => {
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                      <FileText size={18} className="text-slate-500" />
+                      <FileText size={18} weight="duotone" className="text-slate-500" />
                       AI Executive Summary
                     </h3>
                     <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-medium text-slate-600 uppercase">
@@ -515,7 +511,7 @@ const RFPDetail = () => {
                       }}
                       className="inline-flex items-center gap-2 px-4 py-2 bg-slate-900 text-white text-sm font-semibold rounded-lg hover:bg-slate-800 transition-colors"
                     >
-                      <Download size={14} />
+                      <DownloadSimple size={14} weight="duotone" />
                       Executive Summary PDF
                     </button>
                   </div>
@@ -526,7 +522,7 @@ const RFPDetail = () => {
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <Users size={18} className="text-slate-500" />
+                      <Users size={18} weight="duotone" className="text-slate-500" />
                       <h3 className="text-lg font-bold text-slate-900">Competitive Intelligence</h3>
                     </div>
                     <span className="text-xs px-2.5 py-1 rounded-full bg-slate-100 text-slate-600">
@@ -575,7 +571,7 @@ const RFPDetail = () => {
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-5">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <Users size={18} className="text-slate-500" />
+                      <Users size={18} weight="duotone" className="text-slate-500" />
                       <h3 className="text-lg font-bold text-slate-900">Client Intelligence</h3>
                     </div>
                     <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700">
@@ -597,13 +593,12 @@ const RFPDetail = () => {
                               <p className="text-xs text-slate-600">{item.year} · {item.value}</p>
                             </div>
                             <span
-                              className={`text-[11px] px-2 py-0.5 rounded-full ${ 
-                                item.outcome === 'won'
+                              className={`text-[11px] px-2 py-0.5 rounded-full ${item.outcome === 'won'
                                   ? 'bg-emerald-100 text-emerald-700'
                                   : item.outcome === 'lost'
-                                  ? 'bg-rose-100 text-rose-700'
-                                  : 'bg-amber-100 text-amber-700'
-                              }`}
+                                    ? 'bg-rose-100 text-rose-700'
+                                    : 'bg-amber-100 text-amber-700'
+                                }`}
                             >
                               {item.outcome === 'won' ? 'Won' : item.outcome === 'lost' ? 'Lost' : 'Pending'}
                             </span>
@@ -650,7 +645,7 @@ const RFPDetail = () => {
                 {isSales && isInRevision && (
                   <div className="bg-red-50 p-6 rounded-xl shadow-sm border border-red-200 border-l-4 border-l-red-500">
                     <div className="flex items-center gap-2 mb-4">
-                      <AlertTriangle size={20} className="text-red-600" />
+                      <Warning size={20} weight="duotone" className="text-red-600" />
                       <h3 className="text-lg font-bold text-red-900">
                         Change Requests - RFP in Revision
                       </h3>
@@ -658,7 +653,7 @@ const RFPDetail = () => {
                     <p className="text-sm text-red-700 mb-4">
                       The {changeRequests.filter(r => r.status === 'pending').map(r => r.requestedBy === 'tech' ? 'Technical' : 'Pricing').join(' and ')} team has requested changes. Please review and work with the AI agent to address these issues.
                     </p>
-                    
+
                     {changeRequests.filter(r => r.status === 'pending').map((request) => (
                       <div key={request.id} className="mb-4 p-4 bg-white rounded-lg border border-red-200">
                         <div className="flex items-start justify-between mb-3">
@@ -672,7 +667,7 @@ const RFPDetail = () => {
                             Pending Revision
                           </span>
                         </div>
-                        
+
                         <div className="space-y-3 text-sm">
                           <div>
                             <span className="font-semibold text-slate-700">What changes:</span>
@@ -691,11 +686,11 @@ const RFPDetail = () => {
                             <p className="text-slate-800 mt-1">{request.howItMatters}</p>
                           </div>
                         </div>
-                        
+
                         <div className="mt-4 pt-4 border-t border-red-200">
                           <button
                             onClick={() => {
-                              const updated = changeRequests.map(r => 
+                              const updated = changeRequests.map(r =>
                                 r.id === request.id ? { ...r, status: 'revised' as const } : r
                               );
                               setChangeRequests(updated);
@@ -740,7 +735,7 @@ const RFPDetail = () => {
                 {isTech && changeRequests.filter(r => r.requestedBy === 'tech').length > 0 && (
                   <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-purple-500 mb-6">
                     <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
-                      <AlertTriangle size={18} className="text-purple-600" />
+                      <Warning size={18} weight="duotone" className="text-purple-600" />
                       Your Change Requests
                     </h3>
                     {changeRequests.filter(r => r.requestedBy === 'tech').map((request) => (
@@ -749,14 +744,13 @@ const RFPDetail = () => {
                           <span className="text-sm font-semibold text-slate-900">
                             Requested on {request.timestamp}
                           </span>
-                          <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${ 
-                            request.status === 'pending' ? 'bg-amber-100 text-amber-800' :
-                            request.status === 'revised' ? 'bg-blue-100 text-blue-800' :
-                            'bg-green-100 text-green-800'
-                          }`}>
+                          <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${request.status === 'pending' ? 'bg-amber-100 text-amber-800' :
+                              request.status === 'revised' ? 'bg-blue-100 text-blue-800' :
+                                'bg-green-100 text-green-800'
+                            }`}>
                             {request.status === 'pending' ? 'In Revision' :
-                             request.status === 'revised' ? 'Revised - Awaiting Approval' :
-                             'Approved'}
+                              request.status === 'revised' ? 'Revised - Awaiting Approval' :
+                                'Approved'}
                           </span>
                         </div>
                         <div className="space-y-3 text-sm">
@@ -784,7 +778,7 @@ const RFPDetail = () => {
 
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
                   <h3 className="text-sm font-bold text-slate-900 mb-2 flex items-center gap-2">
-                    <Users size={16} className="text-slate-500" />
+                    <Users size={16} weight="duotone" className="text-slate-500" />
                     Technical review & changes
                   </h3>
                   <p className="text-sm text-slate-700 mb-3">{content.techNotes}</p>
@@ -802,7 +796,7 @@ const RFPDetail = () => {
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                      <FileText size={16} className="text-slate-500" />
+                      <FileText size={16} weight="duotone" className="text-slate-500" />
                       SKU Matching (AI mapped)
                     </h3>
                     <span className="text-xs text-slate-500">Source: 06_matched_skus.json</span>
@@ -838,7 +832,7 @@ const RFPDetail = () => {
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-3">
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                      <FileText size={16} className="text-slate-500" />
+                      <FileText size={16} weight="duotone" className="text-slate-500" />
                       Key Technical Constraints
                     </h3>
                     <span className="text-xs text-slate-500">Source: 03_technical_constraints.json</span>
@@ -892,15 +886,15 @@ const RFPDetail = () => {
                 {(isSales || isTech) && (
                   <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-purple-500">
                     <h3 className="text-lg font-bold text-slate-900 mb-2 flex items-center gap-2">
-                      <MessageSquare size={18} className="text-purple-600" />
+                      <ChatCircleDots size={18} weight="duotone" className="text-purple-600" />
                       {isSales ? 'Comments & Requests for Tech Team' : 'Comments from Sales Team'}
                     </h3>
                     <p className="text-xs text-slate-500 mb-4">
-                      {isSales 
+                      {isSales
                         ? 'Send requests, comments, or notes to the technical team to check or keep in mind.'
                         : 'View comments and requests from the sales team regarding this RFP.'}
                     </p>
-                    
+
                     {/* Existing comments */}
                     {techComments.length > 0 ? (
                       <div className="mb-4 space-y-3">
@@ -950,7 +944,7 @@ const RFPDetail = () => {
                           }}
                           className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 transition-colors text-sm"
                         >
-                          <Send size={16} />
+                          <PaperPlaneRight size={16} weight="duotone" />
                           Send to Tech Team
                         </button>
                       </div>
@@ -967,7 +961,7 @@ const RFPDetail = () => {
                 {isPricing && changeRequests.filter(r => r.requestedBy === 'pricing').length > 0 && (
                   <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-amber-500 mb-6">
                     <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
-                      <AlertTriangle size={18} className="text-amber-600" />
+                      <Warning size={18} weight="duotone" className="text-amber-600" />
                       Your Change Requests
                     </h3>
                     {changeRequests.filter(r => r.requestedBy === 'pricing').map((request) => (
@@ -976,14 +970,13 @@ const RFPDetail = () => {
                           <span className="text-sm font-semibold text-slate-900">
                             Requested on {request.timestamp}
                           </span>
-                          <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${ 
-                            request.status === 'pending' ? 'bg-amber-100 text-amber-800' :
-                            request.status === 'revised' ? 'bg-blue-100 text-blue-800' :
-                            'bg-green-100 text-green-800'
-                          }`}>
+                          <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${request.status === 'pending' ? 'bg-amber-100 text-amber-800' :
+                              request.status === 'revised' ? 'bg-blue-100 text-blue-800' :
+                                'bg-green-100 text-green-800'
+                            }`}>
                             {request.status === 'pending' ? 'In Revision' :
-                             request.status === 'revised' ? 'Revised - Awaiting Approval' :
-                             'Approved'}
+                              request.status === 'revised' ? 'Revised - Awaiting Approval' :
+                                'Approved'}
                           </span>
                         </div>
                         <div className="space-y-3 text-sm">
@@ -1011,7 +1004,7 @@ const RFPDetail = () => {
 
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
                   <h3 className="text-sm font-bold text-slate-900 mb-2 flex items-center gap-2">
-                    <DollarSign size={16} className="text-slate-500" />
+                    <CurrencyInr size={16} weight="duotone" className="text-slate-500" />
                     Pricing & margin decision
                   </h3>
                   <p className="text-sm text-slate-700 mb-3">{content.pricingNotes}</p>
@@ -1028,7 +1021,7 @@ const RFPDetail = () => {
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                      <FileText size={16} className="text-slate-500" />
+                      <FileText size={16} weight="duotone" className="text-slate-500" />
                       Bill of Materials
                     </h3>
                     <span className="text-xs text-slate-500">Source: 02_bill_of_materials.json</span>
@@ -1066,7 +1059,7 @@ const RFPDetail = () => {
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                      <FileText size={16} className="text-slate-500" />
+                      <FileText size={16} weight="duotone" className="text-slate-500" />
                       Final Bid (unit pricing)
                     </h3>
                     <span className="text-xs text-slate-500">Source: 07_final_bid.json</span>
@@ -1103,7 +1096,7 @@ const RFPDetail = () => {
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                      <FileText size={16} className="text-slate-500" />
+                      <FileText size={16} weight="duotone" className="text-slate-500" />
                       Service & Testing Costs
                     </h3>
                     <span className="text-xs text-slate-500">Additional to Material Cost</span>
@@ -1134,15 +1127,15 @@ const RFPDetail = () => {
                 {(isSales || isPricing) && (
                   <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-amber-500">
                     <h3 className="text-lg font-bold text-slate-900 mb-2 flex items-center gap-2">
-                      <MessageSquare size={18} className="text-amber-600" />
+                      <ChatCircleDots size={18} weight="duotone" className="text-amber-600" />
                       {isSales ? 'Comments & Requests for Pricing Team' : 'Comments from Sales Team'}
                     </h3>
                     <p className="text-xs text-slate-500 mb-4">
-                      {isSales 
+                      {isSales
                         ? 'Send requests, comments, or notes to the pricing team to check or keep in mind.'
                         : 'View comments and requests from the sales team regarding this RFP.'}
                     </p>
-                    
+
                     {/* Existing comments */}
                     {pricingComments.length > 0 ? (
                       <div className="mb-4 space-y-3">
@@ -1192,7 +1185,7 @@ const RFPDetail = () => {
                           }}
                           className="flex items-center gap-2 px-4 py-2 bg-amber-600 text-white font-medium rounded-lg hover:bg-amber-700 transition-colors text-sm"
                         >
-                          <Send size={16} />
+                          <PaperPlaneRight size={16} weight="duotone" />
                           Send to Pricing Team
                         </button>
                       </div>
@@ -1208,7 +1201,7 @@ const RFPDetail = () => {
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
                   <div className="flex items-center justify-between">
                     <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                      <FileText size={18} className="text-amber-500" />
+                      <FileText size={18} weight="duotone" className="text-amber-500" />
                       Compliance & Logistics
                     </h3>
                     <span className="text-xs px-2.5 py-1 rounded-full bg-amber-50 text-amber-700">
@@ -1285,14 +1278,14 @@ const RFPDetail = () => {
                       onClick={() => window.open(`/docs/${rfp.id}/logistics.md`, '_blank', 'noopener')}
                       className="inline-flex items-center gap-2 px-4 py-2 border border-slate-300 rounded-lg text-sm font-semibold text-slate-800 hover:bg-slate-50"
                     >
-                      <Download size={14} />
+                      <DownloadSimple size={14} weight="duotone" />
                       Download logistics.md
                     </button>
                     <button
                       onClick={() => window.open(`/docs/${rfp.id}/eligibility.md`, '_blank', 'noopener')}
                       className="inline-flex items-center gap-2 px-4 py-2 border border-slate-300 rounded-lg text-sm font-semibold text-slate-800 hover:bg-slate-50"
                     >
-                      <Download size={14} />
+                      <DownloadSimple size={14} weight="duotone" />
                       Download eligibility.md
                     </button>
                   </div>
@@ -1305,7 +1298,7 @@ const RFPDetail = () => {
               <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                    <Clock size={16} className="text-slate-500" />
+                    <Clock size={16} weight="duotone" className="text-slate-500" />
                     Process timeline
                   </h3>
                   <span className="text-xs text-slate-500">
@@ -1319,7 +1312,7 @@ const RFPDetail = () => {
                       <div className="absolute -left-[9px] mt-1.5 h-3 w-3 rounded-full bg-indigo-500 border-2 border-slate-50" />
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
                         <div className="flex items-center gap-2">
-                          <CheckCircle2 size={16} className="text-emerald-600" />
+                          <CheckCircle size={16} weight="duotone" className="text-emerald-600" />
                           <p className="text-sm font-medium text-slate-900">{step.label}</p>
                         </div>
                         <span className="text-xs text-slate-500">{step.time}</span>
@@ -1331,10 +1324,10 @@ const RFPDetail = () => {
                         {step.type === 'system'
                           ? 'System agent'
                           : step.type === 'tech'
-                          ? 'Technical team'
-                          : step.type === 'pricing'
-                          ? 'Pricing team'
-                          : 'Sales'}
+                            ? 'Technical team'
+                            : step.type === 'pricing'
+                              ? 'Pricing team'
+                              : 'Sales'}
                       </p>
                     </li>
                   ))}
@@ -1351,7 +1344,7 @@ const RFPDetail = () => {
           <div className="text-xs sm:text-sm text-slate-500 font-medium px-1 sm:px-4">
             {changeRequests.some(r => r.status === 'revised' && r.requestedBy === role) ? (
               <span className="text-amber-700">
-                <AlertTriangle size={16} className="inline mr-1" />
+                <Warning size={16} weight="duotone" className="inline mr-1" />
                 RFP revised - Ready for your approval
               </span>
             ) : (
@@ -1371,7 +1364,7 @@ const RFPDetail = () => {
             {changeRequests.some(r => r.status === 'revised' && r.requestedBy === role) ? (
               <button
                 onClick={() => {
-                  const updated = changeRequests.map(r => 
+                  const updated = changeRequests.map(r =>
                     r.status === 'revised' && r.requestedBy === role ? { ...r, status: 'approved' as const } : r
                   );
                   setChangeRequests(updated);
@@ -1409,14 +1402,14 @@ const RFPDetail = () => {
                 }}
                 className="text-slate-400 hover:text-slate-900 transition-colors"
               >
-                <X size={22} />
+                <X size={22} weight="duotone" />
               </button>
             </div>
             <div className="p-6 max-h-[70vh] overflow-y-auto scrollbar-hide">
               <p className="text-sm text-slate-600 mb-6">
                 Provide detailed feedback for the AI agent and sales team. This will send the RFP back for revision.
               </p>
-              
+
               <div className="space-y-5">
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-2">
@@ -1429,7 +1422,7 @@ const RFPDetail = () => {
                     onChange={(e) => setChangeRequest({ ...changeRequest, whatChanges: e.target.value })}
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-2">
                     Why are these changes necessary? <span className="text-red-500">*</span>
@@ -1441,7 +1434,7 @@ const RFPDetail = () => {
                     onChange={(e) => setChangeRequest({ ...changeRequest, why: e.target.value })}
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-2">
                     What will be the effect of these changes? <span className="text-red-500">*</span>
@@ -1453,7 +1446,7 @@ const RFPDetail = () => {
                     onChange={(e) => setChangeRequest({ ...changeRequest, effect: e.target.value })}
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-2">
                     How does this matter for the RFP? <span className="text-red-500">*</span>
@@ -1483,7 +1476,7 @@ const RFPDetail = () => {
                     alert('Please fill in all required fields.');
                     return;
                   }
-                  
+
                   const newRequest = {
                     id: Date.now().toString(),
                     requestedBy: role || 'unknown',
@@ -1497,11 +1490,11 @@ const RFPDetail = () => {
                     ...changeRequest,
                     status: 'pending' as const,
                   };
-                  
+
                   const updated = [...changeRequests, newRequest];
                   setChangeRequests(updated);
                   localStorage.setItem(`rfp-${id}-change-requests`, JSON.stringify(updated));
-                  
+
                   alert('Change request sent! RFP is now in revision. Sales team and AI agent will review and make updates.');
                   setModalOpen(false);
                   setChangeRequest({ whatChanges: '', why: '', effect: '', howItMatters: '' });
