@@ -44,7 +44,7 @@ const SalesDashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState<'all' | 'highValue' | 'closingSoon'>('all');
   const [stageFilter, setStageFilter] = useState<'all' | RFPStage>('all');
-  const [valueRange, setValueRange] = useState<'all' | 'lt1' | '1to3' | 'gt3'>('all');
+  const [valueRange, setValueRange] = useState<'all' | 'lt1' | '1to10' | 'gt10'>('all');
   const [urgency, setUrgency] = useState<'all' | 'soon' | 'month'>('all');
   const [ownerFilter, setOwnerFilter] = useState<'all' | string>('all');
   const [riskFilter, setRiskFilter] = useState<'all' | 'high'>('all');
@@ -59,9 +59,13 @@ const SalesDashboard = () => {
     Final: 0.82,
   };
 
-  const parseValueToMillions = (value: string) => {
+  const parseValueToCrores = (value: string) => {
+    // Expected formats: "₹ 12.5 Cr", "₹ 45 Lakhs"
     const numeric = parseFloat(String(value).replace(/[^0-9.]/g, '')) || 0;
-    return numeric >= 100 ? numeric / 1000 : numeric; // handle K vs M notations
+    if (value.toLowerCase().includes('lakh')) {
+      return numeric / 100;
+    }
+    return numeric; // Default assume Cr if not specified or already Cr
   };
 
   const activeRFPs = useMemo(() => {
@@ -86,13 +90,13 @@ const SalesDashboard = () => {
 
   const computedRFPs = useMemo(() => {
     const maxValue = Math.max(
-      ...activeRFPs.map((rfp) => parseValueToMillions(rfp.value)),
+      ...activeRFPs.map((rfp) => parseValueToCrores(rfp.value)),
       1
     );
 
     return activeRFPs.map((rfp) => {
       const days = daysUntil(rfp.deadlineDate);
-      const dealSize = parseValueToMillions(rfp.value);
+      const dealSize = parseValueToCrores(rfp.value);
       const dealSizeScore = Math.min(dealSize / maxValue, 1);
       const urgencyScore = Math.max(0, Math.min(1, (30 - Math.min(days, 30)) / 30));
       const winProbability = winProbabilityByStage[rfp.currentStage] ?? 0.5;
@@ -105,11 +109,11 @@ const SalesDashboard = () => {
       const quickWin =
         winProbability >= 0.65 &&
         days <= 21 &&
-        dealSize <= 3 &&
+        dealSize <= 5 && // Adjusted for Cr
         !rfp.riskFlag;
 
       const strategicBet =
-        dealSize >= 3 &&
+        dealSize >= 5 && // Adjusted for Cr
         (rfp.riskFlag || winProbability < 0.65) &&
         days <= 45;
 
@@ -145,7 +149,7 @@ const SalesDashboard = () => {
 
     if (filter === 'highValue') {
       data = data.filter((rfp) => {
-        return rfp.dealSize >= 5;
+        return rfp.dealSize >= 10; // High value > 10 Cr
       });
     }
 
@@ -160,8 +164,8 @@ const SalesDashboard = () => {
     if (valueRange !== 'all') {
       data = data.filter(rfp => {
         if (valueRange === 'lt1') return rfp.dealSize < 1;
-        if (valueRange === '1to3') return rfp.dealSize >= 1 && rfp.dealSize <= 3;
-        return rfp.dealSize > 3;
+        if (valueRange === '1to10') return rfp.dealSize >= 1 && rfp.dealSize <= 10;
+        return rfp.dealSize > 10;
       });
     }
 
@@ -230,7 +234,7 @@ const SalesDashboard = () => {
               <h3 className="text-xs font-medium text-slate-600 uppercase">Pipeline Value</h3>
               <DollarSign size={20} className="text-emerald-600" />
             </div>
-            <p className="text-3xl font-bold">${totalPipelineValue.toFixed(1)}M</p>
+            <p className="text-3xl font-bold">₹{totalPipelineValue.toFixed(1)} Cr</p>
           </div>
 
           <div className="bg-white p-5 rounded-xl shadow-md shadow-slate-100 border border-slate-200 flex flex-col h-full transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg">
@@ -246,7 +250,7 @@ const SalesDashboard = () => {
               <h3 className="text-xs font-medium text-slate-600 uppercase">Avg Response Time</h3>
               <Clock size={20} className="text-amber-600" />
             </div>
-            <p className="text-3xl font-bold">4 Days</p>
+            <p className="text-3xl font-bold">45 Mins</p>
           </div>
         </div>
             <div className="bg-white shadow-sm rounded-xl border border-slate-200 overflow-hidden">
@@ -280,9 +284,9 @@ const SalesDashboard = () => {
               onChange={(e) => setValueRange(e.target.value as typeof valueRange)}
             >
               <option value="all">All values</option>
-              <option value="lt1">&lt; $1M</option>
-              <option value="1to3">$1M - $3M</option>
-              <option value="gt3">&gt; $3M</option>
+              <option value="lt1">&lt; ₹1 Cr</option>
+              <option value="1to10">₹1 Cr - ₹10 Cr</option>
+              <option value="gt10">&gt; ₹10 Cr</option>
             </select>
 
             <select

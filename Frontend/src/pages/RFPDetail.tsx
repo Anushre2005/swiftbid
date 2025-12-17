@@ -16,61 +16,85 @@ import {
   Download,
 } from 'lucide-react';
 
-// --- FIXED IMPORTS & MOCK DATA ---
-import matchedSkus from "./demo-database/06_matched_skus.json";
-import technicalConstraints from "./demo-database/03_technical_constraints.json";
-import billOfMaterials from "./demo-database/02_bill_of_materials.json";
-import finalBid from "./demo-database/07_final_bid.json";
+// --- MOCKED LOCAL DATA FOR DEMO (Asian Paints Context) ---
 
-// FIX 1: Define commercialLogistics locally to prevent "undefined" errors on nested properties
+const matchedSkus = [
+  { rfp_item_no: "1.01", matched_sku: "AP-WC-XLPE-1.1KV-4C-240SQMM", match_confidence: "98%", notes: "Exact match: 1.1kV, 4-Core, 240sqmm, Al Conductor" },
+  { rfp_item_no: "1.02", matched_sku: "AP-WC-XLPE-1.1KV-4C-120SQMM", match_confidence: "95%", notes: "Standard variant matches RFP requirements." },
+  { rfp_item_no: "2.01", matched_sku: "AP-WC-FRLS-1.1KV-3.5C-70SQMM", match_confidence: "92%", notes: "Proposed FRLS variant as per fire safety spec." },
+  { rfp_item_no: "3.01", matched_sku: "AP-WC-CTRL-1.1KV-12C-2.5SQMM", match_confidence: "88%", notes: "Minor deviation: RFP asks for 'Armoured', quoting 'G.I. Wire Armoured'" }
+];
+
+const technicalConstraints = {
+  applicable_standards: ["IS 7098 (Part-1)", "IS 8130:2013", "IS 5831:1984", "IEC 60332-1"],
+  testing_requirements: ["Routine Test", "Type Test (Sample)", "Fire Resistance Test (FRLS)", "Oxygen Index Test"],
+  specifications: [
+    { component: "Conductor", parameter: "Material", value: "H2 Grade Aluminium", tolerance: "As per IS 8130" },
+    { component: "Insulation", parameter: "Material", value: "XLPE (Cross Linked Polyethylene)", page_ref: "Pg 42" },
+    { component: "Inner Sheath", parameter: "Type", value: "Extruded PVC Type ST2", page_ref: "Pg 43" },
+    { component: "Armouring", parameter: "Material", value: "Galvanized Steel Flat Strip", page_ref: "Pg 44" },
+    { component: "Outer Sheath", parameter: "Color", value: "Black (UV Resistant)", page_ref: "Pg 45" },
+    { component: "Voltage Grade", parameter: "Rating", value: "1100 Volts", page_ref: "Pg 12" }
+  ]
+};
+
+const billOfMaterials = [
+  { rfp_item_no: "1.01", description: "1.1kV, 4C x 240 sqmm Al Ar. XLPE Cable", quantity: 15.5, unit: "km", category: "Power Cable" },
+  { rfp_item_no: "1.02", description: "1.1kV, 4C x 120 sqmm Al Ar. XLPE Cable", quantity: 8.2, unit: "km", category: "Power Cable" },
+  { rfp_item_no: "2.01", description: "1.1kV, 3.5C x 70 sqmm Al Ar. FRLS Cable", quantity: 12.0, unit: "km", category: "FRLS Power" },
+  { rfp_item_no: "3.01", description: "1.1kV, 12C x 2.5 sqmm Cu Ar. Control Cable", quantity: 5.0, unit: "km", category: "Control Cable" },
+  { rfp_item_no: "4.01", description: "Cable Termination Kits (Outdoor)", quantity: 150, unit: "nos", category: "Accessories" }
+];
+
+const finalBid = [
+  { rfp_item_no: "1.01", sku: "AP-WC-XLPE-4C-240", base_price: 850000, transport_adj: 12000, margin_adj: 95000, final_unit_price: 957000 },
+  { rfp_item_no: "1.02", sku: "AP-WC-XLPE-4C-120", base_price: 420000, transport_adj: 8000, margin_adj: 45000, final_unit_price: 473000 },
+  { rfp_item_no: "2.01", sku: "AP-WC-FRLS-3.5C-70", base_price: 310000, transport_adj: 6500, margin_adj: 38000, final_unit_price: 354500 },
+  { rfp_item_no: "3.01", sku: "AP-WC-CTRL-12C-2.5", base_price: 185000, transport_adj: 4000, margin_adj: 22000, final_unit_price: 211000 },
+  { rfp_item_no: "4.01", sku: "AP-ACC-TERM-OUT", base_price: 2500, transport_adj: 50, margin_adj: 450, final_unit_price: 3000 }
+];
+
+const serviceCosts = [
+  { item: "Type Test Charges (Sample)", cost: 45000, note: "Per lot at NABL lab" },
+  { item: "Acceptance Testing (Factory)", cost: 15000, note: "Engineer per diem + travel" },
+  { item: "Third Party Inspection (TPI)", cost: 12500, note: "0.5% of value (est)" },
+  { item: "Freight & Transit Insurance", cost: 125000, note: "Lump sum for 3 trucks" }
+];
+
 const commercialLogistics = {
-  incoterms: "DDP Site",
-  delivery_period_weeks: 16,
-  payment_terms: "30% Advance, 60% Dispatch, 10% Handover",
-  warranty_terms: "18 months from supply or 12 months from commissioning",
-  insurance_responsibility: "Supplier until handover",
-  unloading_responsibility: "Buyer (Crane provided by site)",
-  packing_requirements: "Seaworthy export packing",
-  taxes_and_duties: "Included in final unit price",
+  incoterms: "FOR Destination (Project Site)",
+  delivery_period_weeks: 12,
+  payment_terms: "100% against receipt and acceptance",
+  warranty_terms: "12 months from date of commissioning",
+  insurance_responsibility: "Vendor Scope (Transit + Storage)",
+  unloading_responsibility: "Vendor Scope",
+  packing_requirements: "Wooden Drums (Non-returnable)",
+  taxes_and_duties: "GST Extra as applicable (18%)",
   currency: "INR",
   liquidated_damages: {
     rate_per_week: "0.5%",
-    max_cap: "5% of contract value"
+    max_cap: "10% of undelivered value"
   },
   financial_instruments: {
-    performance_bank_guarantee: "10% required",
-    security_deposit: "Not required"
+    performance_bank_guarantee: "3% of Contract Value",
+    security_deposit: "Not Applicable"
   }
 };
 
-// FIX 2: Define complianceEligibilityMd locally since it was missing from imports
-const complianceEligibilityMd = `
-- [ ] Valid ISO 9001:2015 Certificate
-- [ ] Audited Financial Statements (Last 3 Years)
-- [ ] Manufacturer Authorization Form (MAF)
-- [ ] Tax Clearance Certificate
-- [ ] Anti-Collusion Affidavit
-- [ ] Technical Compliance Sheet (Signed)
-`;
+const complianceEligibilityMd = "\n- [ ] Class-I Local Supplier (>= 50% Local Content)\n- [ ] Valid BIS License for IS:7098 (Part-1)\n- [ ] Type Test Reports (NABL Accredited Lab) < 5 Yrs\n- [ ] Average Annual Turnover > ₹ 50 Cr (Last 3 FY)\n- [ ] Past Performance: 20% of Qty supplied in one order\n- [ ] Non-Blacklisting Declaration\n";
 
 const RFPDetail = () => {
   const { id } = useParams();
   const { role } = useAuth();
 
-  // Make lookup resilient to string/number mismatch
   const rfp = useMemo(
     () => mockRFPs.find((r) => String(r.id) === String(id)),
     [id]
   );
 
-  // which tab is active
   const [activeTab, setActiveTab] = useState<'summary' | 'tech' | 'pricing' | 'compliance'>('summary');
-
-  // Sales notes (for sales view)
   const [salesNotes, setSalesNotes] = useState(rfp?.salesNotes || '');
   const [isModalOpen, setModalOpen] = useState(false);
-  
-  // Change request form state
   const [changeRequest, setChangeRequest] = useState({
     whatChanges: '',
     why: '',
@@ -78,7 +102,6 @@ const RFPDetail = () => {
     howItMatters: '',
   });
   
-  // Load change requests from localStorage
   const loadChangeRequests = () => {
     try {
       const stored = localStorage.getItem(`rfp-${id}-change-requests`);
@@ -88,7 +111,7 @@ const RFPDetail = () => {
     }
   };
   
-  const [changeRequests, setChangeRequests] = useState<Array<{
+  const [changeRequests, setChangeRequests] = useState<Array<{ 
     id: string;
     requestedBy: string;
     timestamp: string;
@@ -99,10 +122,8 @@ const RFPDetail = () => {
     status: 'pending' | 'revised' | 'approved';
   }>>(() => loadChangeRequests());
   
-  // Check if RFP is in revision
   const isInRevision = changeRequests.some(req => req.status === 'pending');
   
-  // Comments for tech and pricing teams - load from localStorage
   const loadComments = (key: string) => {
     try {
       const stored = localStorage.getItem(key);
@@ -129,7 +150,6 @@ const RFPDetail = () => {
   const [newTechComment, setNewTechComment] = useState('');
   const [newPricingComment, setNewPricingComment] = useState('');
 
-  // Save comments to localStorage whenever they change
   useEffect(() => {
     saveComments(`rfp-${id}-tech-comments`, techComments);
   }, [techComments, id]);
@@ -155,23 +175,27 @@ const RFPDetail = () => {
   const isTech = role === 'tech';
   const isPricing = role === 'pricing';
 
-  // You can later swap these with real backend fields:
-  const fakeSummary =
-    (rfp as any).summary ||
-    `This RFP from ${rfp.client} for "${rfp.title}" aligns well with our capabilities in large industrial and infrastructure execution. SwiftBid AI has parsed the tender, mapped the BOQ to internal SKUs and generated a draft proposal with recommended pricing and risk-margins.`;
+  // --- DYNAMIC SUMMARY LOGIC BASED ON CLIENT ---
+  
+  const getSummaryContent = (clientName: string) => {
+    if (clientName === 'SDSC SHAR') {
+      return {
+        summary: `This RFP from SDSC SHAR (Satish Dhawan Space Centre) involves the supply of Armoured PIJF Copper Cables (10P, 20P, 50P, 100P) and PVC Switch Board Cables. The tender operates on a Two-Part Bid system via the GeM portal. SwiftBid AI has identified key compliance requirements including 'Make in India' (Class-I Supplier >50% local content) and a strict 8-week delivery schedule. The AI has mapped the PIJF specs to our 'Telecom-Grade' copper cable inventory with high confidence.`,
+        techNotes: `Technical validation complete. The requested PIJF cables match our 'Polythene Insulated Jelly Filled' series. Compliance with Department of Space quality standards is mandatory. Deviation: RFP requests 8-week delivery; standard lead time is 10 weeks - flagged for sales negotiation.`,
+        pricingNotes: `Pricing calibrated for Government e-Marketplace (GeM) competitiveness. Base rates indexed to Copper (LME). Added 2% buffer for 'Space Centre' specific packaging/inspection requirements. Liquidated damages risk (0.5%/week) factored into risk margin.`,
+        profitMargin: '12.5% (Govt Rate)'
+      };
+    }
+    // Default / Other clients
+    return {
+      summary: `This RFP from ${rfp.client} for "${rfp.title}" aligns with our core industrial cable offerings. SwiftBid AI parsed the BOQ and technical specs, mapping them to our 'Royale' and 'Apex' series. A draft proposal is ready with standard commercial terms.`,
+      techNotes: `Spec mapping verified. Standard IS:7098 (XLPE) and IS:1554 (PVC) standards apply. No major deviations found.`,
+      pricingNotes: `Standard commercial pricing applied. Logistics cost estimated for site delivery.`,
+      profitMargin: '15.0% (Standard)'
+    };
+  };
 
-  const techNotes =
-    (rfp as any).techNotes ||
-    `Technical team validated the AI SKU mapping, ensured compliance with core specs and flagged minor deviations for discussion with the client. All mandatory standards and testing requirements are covered in the final BOQ.`;
-
-  const pricingNotes =
-    (rfp as any).pricingNotes ||
-    `Pricing team applied standard margin guardrails, added logistics and test costs, and calibrated final price based on historical win/loss data in similar projects.`;
-
-  const profitMargin =
-    (rfp as any).profitMargin !== undefined
-      ? `${(rfp as any).profitMargin}%`
-      : '18% (target)';
+  const content = getSummaryContent(rfp.client);
 
   const competitorIntel = useMemo(() => {
     const presets: Record<
@@ -182,36 +206,27 @@ const RFPDetail = () => {
         gaps: string[];
       }
     > = {
-      InfraCorp: {
+      'SDSC SHAR': {
         knownCompetitors: [
-          { name: 'NetWave', winRate: 62 },
-          { name: 'FiberGrid', winRate: 55 },
-          { name: 'AxisCore', winRate: 48 },
+          { name: 'Finolex Cables', winRate: 65 },
+          { name: 'Delton Cables', winRate: 58 },
+          { name: 'Paramount Comm', winRate: 52 },
         ],
-        strengths: ['Faster deployment SLAs', 'Deep integration with legacy infra', 'Lower TCO in 3-year view'],
-        gaps: ['On-prem security certifications in progress', 'Fewer local delivery partners'],
-      },
-      'SwiftCorp Global': {
-        knownCompetitors: [
-          { name: 'CloudSpan', winRate: 58 },
-          { name: 'DataSphere', winRate: 50 },
-          { name: 'HelixEdge', winRate: 47 },
-        ],
-        strengths: ['Stronger migration playbooks', 'Proven uptime benchmarks', 'Competitive blended rate card'],
-        gaps: ['Limited Tier-3 DC coverage in APAC', 'Referenceable wins are mostly mid-market'],
+        strengths: ['OEM Status for PIJF Cables', 'Class-I Local Supplier Cert', 'Past performance with ISRO units'],
+        gaps: ['Delivery timeline (8 weeks) is tight', 'Strict LD clauses'],
       },
       default: {
         knownCompetitors: [
-          { name: 'Competitor A', winRate: 54 },
-          { name: 'Competitor B', winRate: 49 },
-          { name: 'Competitor C', winRate: 46 },
+          { name: 'Polycab', winRate: 62 },
+          { name: 'Havells', winRate: 55 },
+          { name: 'KEI Industries', winRate: 48 },
         ],
-        strengths: ['Responsive bid team', 'Configurable architecture', 'Transparent pricing envelopes'],
-        gaps: ['Need fresher case studies', 'Certifications pending on two regions'],
+        strengths: ['Superior lead time', 'In-house compound manufacturing'],
+        gaps: ['Higher logistics cost', 'Pending approval for specific joints'],
       },
     };
 
-    const picked = presets[rfp.client as keyof typeof presets] ?? presets.default;
+    const picked = presets[rfp.client] ?? presets.default;
     const avgWinRate =
       picked.knownCompetitors.reduce((sum, c) => sum + c.winRate, 0) / picked.knownCompetitors.length;
 
@@ -231,46 +246,34 @@ const RFPDetail = () => {
         buyingCriteria: string[];
       }
     > = {
-      InfraCorp: {
+      'SDSC SHAR': {
         history: [
-          { year: '2024', deal: 'WAN refresh', outcome: 'won', value: '$1.1M' },
-          { year: '2023', deal: 'Campus LAN', outcome: 'lost', value: '$900k' },
-          { year: '2022', deal: 'MPLS migration', outcome: 'won', value: '$700k' },
+          { year: '2023', deal: 'Fiber Optic Supply', outcome: 'won', value: '₹ 1.2 Cr' },
+          { year: '2022', deal: 'Power Cabling Ph-2', outcome: 'lost', value: '₹ 3.5 Cr' },
+          { year: '2021', deal: 'Instrumentation AMC', outcome: 'won', value: '₹ 0.8 Cr' },
         ],
         decisionMakers: [
-          { name: 'Sanjay Mehta', role: 'CIO', preference: 'Uptime and rollout certainty; minimal disruption' },
-          { name: 'Lisa Carter', role: 'Procurement', preference: 'Transparent pricing, clear SLA penalties' },
+          { name: 'Head (Purchase)', role: 'Procurement', preference: 'GeM Compliance & L1 Price' },
+          { name: 'Dy. Manager (Telecom)', role: 'Technical', preference: 'Quality & OEM Certification' },
         ],
-        painPoints: ['Legacy sites with mixed vendors', 'Aggressive timeline for cutover', 'Strict SLA penalties'],
-        buyingCriteria: ['Demonstrated rollout plan', 'SLA guarantees with credits', 'Local support coverage'],
-      },
-      'SwiftCorp Global': {
-        history: [
-          { year: '2024', deal: 'Cloud phase 1', outcome: 'won', value: '$1.6M' },
-          { year: '2023', deal: 'Data center move', outcome: 'lost', value: '$2.0M' },
-        ],
-        decisionMakers: [
-          { name: 'Amelia Rhodes', role: 'VP Infrastructure', preference: 'Referenceable migrations and rollback plans' },
-          { name: 'Dev Patel', role: 'Finance controller', preference: 'Cost predictability; phased payments' },
-        ],
-        painPoints: ['Risk of downtime during migration', 'Desire for phased spend', 'Need for joint runbooks'],
-        buyingCriteria: ['Pilot-first approach', 'Transparent T&M bands', 'Shared success milestones'],
+        painPoints: ['Delayed deliveries in past contracts', 'Non-compliance with "Make in India"'],
+        buyingCriteria: ['Class-I Local Supplier', 'Acceptance of GeM Terms', 'PBG Submission'],
       },
       default: {
         history: [
-          { year: '2024', deal: 'Security upgrade', outcome: 'won', value: '$950k' },
-          { year: '2023', deal: 'Network audit', outcome: 'won', value: '$250k' },
+          { year: '2024', deal: 'Phase 1 Cabling', outcome: 'won', value: '₹ 8.5 Cr' },
+          { year: '2023', deal: 'Control Wiring', outcome: 'lost', value: '₹ 2.1 Cr' },
         ],
         decisionMakers: [
-          { name: 'Primary Sponsor', role: 'Director IT', preference: 'Clear roadmap and ownership' },
-          { name: 'Procurement Lead', role: 'Procurement', preference: 'Clean commercials and SLA clarity' },
+          { name: 'Project Director', role: 'Technical', preference: 'Adherence to delivery schedule' },
+          { name: 'Procurement Head', role: 'Commercial', preference: 'Total Cost of Ownership (L1)' },
         ],
-        painPoints: ['Need faster delivery', 'Compliance documentation burden'],
-        buyingCriteria: ['Rapid deployment plan', 'Complete compliance pack'],
+        painPoints: ['Past delays', 'Quality inspection failures'],
+        buyingCriteria: ['Valid BIS Licenses', 'Type Test Reports'],
       },
     };
 
-    const picked = presets[rfp.client as keyof typeof presets] ?? presets.default;
+    const picked = presets[rfp.client] ?? presets.default;
     const winRate =
       picked.history.filter((h) => h.outcome === 'won').length / Math.max(picked.history.length, 1);
 
@@ -284,7 +287,6 @@ const RFPDetail = () => {
     new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value);
 
   const eligibilityChecklist = useMemo(() => {
-    // FIX: Using the locally defined string now
     return complianceEligibilityMd
       .split('\n')
       .map((line) => line.trim())
@@ -300,37 +302,37 @@ const RFPDetail = () => {
 
   const processTimeline = [
     {
-      label: 'RFP ingested',
+      label: 'RFP Ingested',
       time: 'Day 0 · 09:00',
-      description: 'SwiftBid agent scraped the opportunity from the client portal.',
+      description: 'Sales Agent identified tender via GeM Portal scan.',
       type: 'system',
     },
     {
-      label: 'AI parsing & spec extraction',
+      label: 'AI Parsing & Mapping',
       time: 'Day 0 · 09:05',
       description:
-        'RFP PDF processed; requirements, BOQ and constraints converted to structured data.',
+        'Technical Agent extracted PIJF specs and matched against Telecom Cable catalog.',
       type: 'system',
     },
     {
-      label: 'Technical mapping',
+      label: 'Technical Review',
       time: 'Day 0 · 10:30',
       description:
-        'Tech team reviewed SKU mapping, resolved spec gaps and locked final product list.',
+        'Tech Engineer validated 8-week delivery feasibility and copper grades.',
       type: 'tech',
     },
     {
-      label: 'Pricing & margin decision',
+      label: 'Pricing Strategy',
       time: 'Day 0 · 14:00',
       description:
-        'Pricing agent calculated total cost, added margin and validated against thresholds.',
+        'Pricing Agent applied Govt Rate Card margins and calculated LD risks.',
       type: 'pricing',
     },
     {
-      label: 'Sales review',
+      label: 'Final Approval',
       time: 'Day 1 · 10:00',
       description:
-        'Sales manager reviewed summary, risks and margin; ready for negotiation and submission.',
+        'Sales Manager reviewing final commercial bid for GeM submission.',
       type: 'sales',
     },
   ];
@@ -389,19 +391,19 @@ const RFPDetail = () => {
                 <div className="flex justify-between">
                   <span>Profit margin</span>
                   <span className="font-semibold text-emerald-700">
-                    {profitMargin}
+                    {content.profitMargin}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Spec match score</span>
                   <span className="font-semibold text-slate-800">
-                    {(rfp as any).specMatch || '91%'}
+                    {(rfp as any).specMatch || '94%'}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Exceptions</span>
                   <span className="font-semibold text-slate-800">
-                    {(rfp as any).exceptions ?? '2 (resolved)'}
+                    {(rfp as any).exceptions ?? '1 (approved)'}
                   </span>
                 </div>
               </div>
@@ -419,7 +421,7 @@ const RFPDetail = () => {
                   className="w-full flex items-center gap-2 px-3 py-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition-colors text-sm font-medium text-slate-700"
                 >
                   <FileText size={16} className="text-slate-600" />
-                  <span className="flex-1 text-left">Original RFP PDF</span>
+                  <span className="flex-1 text-left">Original Tender PDF</span>
                   <Download size={14} className="text-slate-500" />
                 </button>
                 <button
@@ -429,7 +431,7 @@ const RFPDetail = () => {
                   className="w-full flex items-center gap-2 px-3 py-2.5 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-lg transition-colors text-sm font-medium text-indigo-700"
                 >
                   <FileText size={16} className="text-indigo-600" />
-                  <span className="flex-1 text-left">Final Solution PDF</span>
+                  <span className="flex-1 text-left">Price Bid (Annex-VI)</span>
                   <Download size={14} className="text-indigo-500" />
                 </button>
               </div>
@@ -443,7 +445,7 @@ const RFPDetail = () => {
           <div className="flex border-b border-slate-200 mb-6">
             <button
               onClick={() => setActiveTab('summary')}
-              className={`px-6 py-3 font-medium text-sm border-b-2 -mb-px transition-colors ${
+              className={`px-6 py-3 font-medium text-sm border-b-2 -mb-px transition-colors ${ 
                 activeTab === 'summary'
                   ? 'border-slate-900 text-slate-900'
                   : 'border-transparent text-slate-500 hover:text-slate-900'
@@ -453,7 +455,7 @@ const RFPDetail = () => {
             </button>
             <button
               onClick={() => setActiveTab('tech')}
-              className={`px-6 py-3 font-medium text-sm border-b-2 -mb-px transition-colors ${
+              className={`px-6 py-3 font-medium text-sm border-b-2 -mb-px transition-colors ${ 
                 activeTab === 'tech'
                   ? 'border-slate-900 text-slate-900'
                   : 'border-transparent text-slate-500 hover:text-slate-900'
@@ -463,7 +465,7 @@ const RFPDetail = () => {
             </button>
             <button
               onClick={() => setActiveTab('pricing')}
-              className={`px-6 py-3 font-medium text-sm border-b-2 -mb-px transition-colors ${
+              className={`px-6 py-3 font-medium text-sm border-b-2 -mb-px transition-colors ${ 
                 activeTab === 'pricing'
                   ? 'border-slate-900 text-slate-900'
                   : 'border-transparent text-slate-500 hover:text-slate-900'
@@ -473,7 +475,7 @@ const RFPDetail = () => {
             </button>
             <button
               onClick={() => setActiveTab('compliance')}
-              className={`px-6 py-3 font-medium text-sm border-b-2 -mb-px transition-colors ${
+              className={`px-6 py-3 font-medium text-sm border-b-2 -mb-px transition-colors ${ 
                 activeTab === 'compliance'
                   ? 'border-slate-900 text-slate-900'
                   : 'border-transparent text-slate-500 hover:text-slate-900'
@@ -498,18 +500,19 @@ const RFPDetail = () => {
                       Sales view
                     </span>
                   </div>
-                  <p className="text-slate-700 leading-relaxed text-sm mb-3">{fakeSummary}</p>
+                  <p className="text-slate-700 leading-relaxed text-sm mb-3">{content.summary}</p>
                   <ul className="list-disc list-inside text-slate-600 space-y-1.5 text-sm">
-                    <li>High technical match score for core components.</li>
-                    <li>Key risks and compliance requirements are tracked for follow-up.</li>
+                    <li>High technical match score for PIJF and PVC copper cables.</li>
+                    <li>Key risks: 8-week delivery timeline and 0.5%/week LD clause.</li>
                     <li>
-                      Price positioning can be tuned based on competitor behaviour and client
-                      profile.
+                      Price positioning reflects 'Make in India' preference benefits.
                     </li>
                   </ul>
                   <div className="mt-4">
                     <button
-                      onClick={() => window.open(`/docs/${rfp.id}/executive-summary.pdf`, '_blank', 'noopener')}
+                      onClick={() => {
+                        window.open(`/docs/${rfp.id}/executive-summary.pdf`, '_blank', 'noopener');
+                      }}
                       className="inline-flex items-center gap-2 px-4 py-2 bg-slate-900 text-white text-sm font-semibold rounded-lg hover:bg-slate-800 transition-colors"
                     >
                       <Download size={14} />
@@ -594,7 +597,7 @@ const RFPDetail = () => {
                               <p className="text-xs text-slate-600">{item.year} · {item.value}</p>
                             </div>
                             <span
-                              className={`text-[11px] px-2 py-0.5 rounded-full ${
+                              className={`text-[11px] px-2 py-0.5 rounded-full ${ 
                                 item.outcome === 'won'
                                   ? 'bg-emerald-100 text-emerald-700'
                                   : item.outcome === 'lost'
@@ -730,7 +733,7 @@ const RFPDetail = () => {
               </>
             )}
 
-            {/* TECH TAB */}
+            {/* TECHTAB */}
             {activeTab === 'tech' && (
               <>
                 {/* Show change requests made by tech team */}
@@ -746,7 +749,7 @@ const RFPDetail = () => {
                           <span className="text-sm font-semibold text-slate-900">
                             Requested on {request.timestamp}
                           </span>
-                          <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${
+                          <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${ 
                             request.status === 'pending' ? 'bg-amber-100 text-amber-800' :
                             request.status === 'revised' ? 'bg-blue-100 text-blue-800' :
                             'bg-green-100 text-green-800'
@@ -784,14 +787,15 @@ const RFPDetail = () => {
                     <Users size={16} className="text-slate-500" />
                     Technical review & changes
                   </h3>
-                  <p className="text-sm text-slate-700 mb-3">{techNotes}</p>
+                  <p className="text-sm text-slate-700 mb-3">{content.techNotes}</p>
                   <ul className="text-xs text-slate-600 space-y-1.5">
-                    <li>• Spec-to-SKU match score: {(rfp as any).specMatch || '91%'}</li>
+                    <li>• Spec-to-SKU match score: {(rfp as any).specMatch || '94%'}
+                    </li>
                     <li>
                       • Exceptions handled:{' '}
-                      {(rfp as any).exceptions ?? '2 (all resolved with alternates)'}
+                      {(rfp as any).exceptions ?? '1 (approved with alternate)'}
                     </li>
-                    <li>• Test & compliance requirements included in final BOQ.</li>
+                    <li>• Type Test reports attached in Annexure-IV.</li>
                   </ul>
                 </div>
 
@@ -923,7 +927,7 @@ const RFPDetail = () => {
                       <div className="space-y-3">
                         <textarea
                           className="w-full h-32 p-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 outline-none resize-none text-slate-800 text-sm"
-                          placeholder="E.g., Please verify compliance with ISO 27001 requirements. Client mentioned they need additional security certifications..."
+                          placeholder="E.g., Please confirm if we can supply the 'Outdoor' termination kits or if we need to outsource..."
                           value={newTechComment}
                           onChange={(e) => setNewTechComment(e.target.value)}
                         />
@@ -956,7 +960,7 @@ const RFPDetail = () => {
               </>
             )}
 
-            {/* PRICING TAB */}
+            {/* PRICINGTAB */}
             {activeTab === 'pricing' && (
               <>
                 {/* Show change requests made by pricing team */}
@@ -972,7 +976,7 @@ const RFPDetail = () => {
                           <span className="text-sm font-semibold text-slate-900">
                             Requested on {request.timestamp}
                           </span>
-                          <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${
+                          <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${ 
                             request.status === 'pending' ? 'bg-amber-100 text-amber-800' :
                             request.status === 'revised' ? 'bg-blue-100 text-blue-800' :
                             'bg-green-100 text-green-800'
@@ -1010,13 +1014,14 @@ const RFPDetail = () => {
                     <DollarSign size={16} className="text-slate-500" />
                     Pricing & margin decision
                   </h3>
-                  <p className="text-sm text-slate-700 mb-3">{pricingNotes}</p>
+                  <p className="text-sm text-slate-700 mb-3">{content.pricingNotes}</p>
                   <ul className="text-xs text-slate-600 space-y-1.5">
-                    <li>• Target margin: {profitMargin}</li>
-                    <li>
-                      • Risk buffer: {(rfp as any).riskBuffer || '3%'} for penalties & overruns.
+                    <li>• Target margin: {content.profitMargin}
                     </li>
-                    <li>• Positioned to stay competitive vs past tender benchmarks.</li>
+                    <li>
+                      • Risk buffer: {(rfp as any).riskBuffer || '2.5%'} for metal price volatility.
+                    </li>
+                    <li>• Competitively priced to win against Polycab and Havells benchmarks.</li>
                   </ul>
                 </div>
 
@@ -1030,7 +1035,7 @@ const RFPDetail = () => {
                   </div>
                   <div className="text-sm text-slate-700">
                     <p className="font-semibold text-slate-900">Line items: {bomSummary.totalLines}</p>
-                    <p>Total quantity: {bomSummary.totalQty.toFixed(1)} km</p>
+                    <p>Total quantity: {bomSummary.totalQty.toFixed(1)} units/km</p>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="min-w-full text-sm">
@@ -1072,10 +1077,10 @@ const RFPDetail = () => {
                         <tr className="text-left text-xs uppercase text-slate-500">
                           <th className="py-2 pr-4">RFP Item</th>
                           <th className="py-2 pr-4">SKU</th>
-                          <th className="py-2 pr-4">Base</th>
+                          <th className="py-2 pr-4">Base (₹)</th>
                           <th className="py-2 pr-4">Transport</th>
                           <th className="py-2 pr-4">Margin Adj</th>
-                          <th className="py-2">Final Unit</th>
+                          <th className="py-2">Final Unit (₹)</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100">
@@ -1087,6 +1092,37 @@ const RFPDetail = () => {
                             <td className="py-2 pr-4 text-slate-800">{formatCurrency(row.transport_adj)}</td>
                             <td className="py-2 pr-4 text-slate-800">{formatCurrency(row.margin_adj)}</td>
                             <td className="py-2 text-slate-900 font-semibold">{formatCurrency(row.final_unit_price)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* Service & Testing Costs Table */}
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                      <FileText size={16} className="text-slate-500" />
+                      Service & Testing Costs
+                    </h3>
+                    <span className="text-xs text-slate-500">Additional to Material Cost</span>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full text-sm">
+                      <thead>
+                        <tr className="text-left text-xs uppercase text-slate-500">
+                          <th className="py-2 pr-4">Service Item</th>
+                          <th className="py-2 pr-4">Cost (₹)</th>
+                          <th className="py-2">Notes</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {serviceCosts.map((row) => (
+                          <tr key={row.item} className="align-top">
+                            <td className="py-2 pr-4 font-medium text-slate-900">{row.item}</td>
+                            <td className="py-2 pr-4 text-slate-800">{formatCurrency(row.cost)}</td>
+                            <td className="py-2 text-slate-600 text-xs">{row.note}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -1133,7 +1169,7 @@ const RFPDetail = () => {
                       <div className="space-y-3">
                         <textarea
                           className="w-full h-32 p-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none resize-none text-slate-800 text-sm"
-                          placeholder="E.g., Client has budget constraints. Can we explore flexible payment terms? Also, competitor X typically bids 5-10% lower..."
+                          placeholder="E.g., Competitor Y is known to underbid on logistics. Can we tighten our transport assumptions?"
                           value={newPricingComment}
                           onChange={(e) => setNewPricingComment(e.target.value)}
                         />
@@ -1173,10 +1209,10 @@ const RFPDetail = () => {
                   <div className="flex items-center justify-between">
                     <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
                       <FileText size={18} className="text-amber-500" />
-                      Compliance & Eligibility
+                      Compliance & Logistics
                     </h3>
                     <span className="text-xs px-2.5 py-1 rounded-full bg-amber-50 text-amber-700">
-                      Status: {rfp.riskFlag ? 'Open items' : 'On track'}
+                      Status: {rfp.riskFlag ? 'Pending Clarifications' : 'Compliant'}
                     </span>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-slate-700">
