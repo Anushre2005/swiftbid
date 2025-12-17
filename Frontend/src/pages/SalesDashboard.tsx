@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { mockRFPs } from '../data/mockData';
 import StageProgressBar from '../components/shared/StageProgressBar';
+import { ChatbotPopup, FloatingChatbotButton } from './SpecialistInbox';
 import {
   TrendingUp,
   Clock,
@@ -11,7 +12,6 @@ import {
   Sparkles,
   Target,
 } from 'lucide-react';
-import { ChatbotPopup, FloatingChatbotButton } from './SpecialistInbox';
 import type { UserRole, RFPStage } from '../types';
 
 // Get status badge color
@@ -42,7 +42,6 @@ const getStatusText = (waitingOn: UserRole | 'completed') => {
 };
 
 const SalesDashboard = () => {
-  const [chatbotOpen, setChatbotOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState<'all' | 'highValue' | 'closingSoon'>('all');
   const [stageFilter, setStageFilter] = useState<'all' | RFPStage>('all');
@@ -51,6 +50,7 @@ const SalesDashboard = () => {
   const [ownerFilter, setOwnerFilter] = useState<'all' | string>('all');
   const [riskFilter, setRiskFilter] = useState<'all' | 'high'>('all');
   const [focusFilter, setFocusFilter] = useState<'all' | 'quickWins' | 'strategicBets'>('all');
+  const [chatbotOpen, setChatbotOpen] = useState(false);
   const navigate = useNavigate();
 
   const winProbabilityByStage: Record<RFPStage, number> = {
@@ -208,8 +208,7 @@ const SalesDashboard = () => {
   }, [filteredRFPs]);
 
   return (
-    <>
-      <div className="min-h-screen bg-slate-50 px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+    <div className="min-h-screen bg-slate-50 px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
       <div className="max-w-7xl mx-auto w-full">
         <div className="flex flex-col lg:flex-row gap-6">
           <div className="flex-1 min-w-0">
@@ -502,10 +501,9 @@ const SalesDashboard = () => {
           </aside>
         </div>
       </div>
-      </div>
       {!chatbotOpen && <FloatingChatbotButton onClick={() => setChatbotOpen(true)} />}
       <ChatbotPopup open={chatbotOpen} onClose={() => setChatbotOpen(false)} />
-    </>
+    </div>
   );
 };
 
