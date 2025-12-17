@@ -1,4 +1,4 @@
-import { LayoutDashboard, Inbox, FileText, LogOut, User, BarChart3 } from 'lucide-react';
+import { LayoutDashboard, Inbox, FileText, LogOut, User, BarChart3, Bot } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
@@ -66,6 +66,13 @@ const Sidebar = () => {
             <LayoutDashboard size={20} className={location.pathname === '/dashboard' ? 'text-blue-400' : ''} /> 
             <span>Dashboard</span>
             </Link>
+        )}
+        
+        {(isSales || isManagement) && (
+          <Link to="/sales-agent" className={linkClasses('/sales-agent')}>
+            <Bot size={20} className={location.pathname === '/sales-agent' ? 'text-indigo-400' : ''} /> 
+            <span>Sales Agent</span>
+          </Link>
         )}
 
         {/* Specialists see My Inbox */}

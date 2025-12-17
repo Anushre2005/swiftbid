@@ -8,6 +8,7 @@ import ManagementDashboard from './pages/ManagementDashboard';
 import SpecialistInbox from './pages/SpecialistInbox';
 import RFPDetail from './pages/RFPDetail';
 import AllRFPsPage from './pages/AllRFPsPage';
+import SalesAgentPage from './pages/SalesAgentPage';
 import { useAuth } from './context/AuthContext';
 import { AuthProvider } from './context/AuthContext';
 
@@ -45,6 +46,7 @@ function AppRoutes() {
         <Route path="/inbox" element={<SpecialistInbox />} />
         <Route path="/all-rfps" element={<AllRFPsPage />} />
         <Route path="/rfp/:id" element={<RFPDetail />} />
+        <Route path="/sales-agent" element={<SalesAgentPage />} />
       </Route>
       
       {/* Catch all - redirect to login */}
