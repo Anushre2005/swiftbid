@@ -1,73 +1,39 @@
-# React + TypeScript + Vite
+# SwiftBid
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Automating B2B RFP Responses with Agentic AI.
 
-Currently, two official plugins are available:
+## Overview
+SwiftBid is a multi-agent AI system designed to automate the B2B Request for Proposal (RFP) response process for industrial manufacturers. It streamlines RFP identification, product matching, and pricing estimation to improve response speed and accuracy.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Problem Statement
+Current manual RFP response processes face several bottlenecks:
+- **Delayed Identification:** Sales teams often miss RFP releases or identify them too late.
+- **Manual Matching:** Technical teams spend excessive time manually matching product SKUs to RFP specifications.
+- **Workflow Inefficiencies:** Manual handoffs between Sales, Technical, and Pricing teams cause delays that impact win rates.
 
-## React Compiler
+## Solution Architecture
+SwiftBid simulates the RFP response workflow using four specialized AI agents:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. **Main Agent (Orchestrator):** Coordinates the workflow, passes context between agents, and consolidates the final bid response.
+2. **Sales Agent:** Scans sources for upcoming RFPs, summarizes requirements, and identifies deadlines.
+3. **Technical Agent:** Analyzes RFP technical specifications and maps them to internal OEM product SKUs with a "Spec Match" score.
+4. **Pricing Agent:** Calculates material and service costs based on product selection and required testing standards.
 
-## Expanding the ESLint configuration
+## Technology Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Backend
+- **Language:** Python
+- **Frameworks:** LangChain, LangGraph
+- **AI Models:** Gemini Pro and Flash models
+- **Environment Management:** uv
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Frontend
+- **Framework:** React
+- **Language:** TypeScript
+- **Build Tool:** Vite
+- **Styling:** Tailwind CSS
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Project Goals
+- Scale the number of RFP responses per year.
+- Reduce lead time for technical product matching.
+- Ensure timely submissions to increase contract win rates.
