@@ -3,9 +3,11 @@ import { mockRFPs } from '../data/mockData';
 import { Link, useNavigate } from 'react-router-dom';
 import StageProgressBar from '../components/shared/StageProgressBar';
 import { Clock, DollarSign, Activity, CheckCircle2, ListFilter, Sparkles, Target } from 'lucide-react';
+import { ChatbotPopup, FloatingChatbotButton } from './SpecialistInbox';
 import type { RFPStage, UserRole } from '../types';
 
 const ManagementDashboard = () => {
+  const [chatbotOpen, setChatbotOpen] = useState(false);
   const navigate = useNavigate();
   const [stageFilter, setStageFilter] = useState<'all' | RFPStage>('all');
   const [valueRange, setValueRange] = useState<'all' | 'lt1' | '1to3' | 'gt3'>('all');
@@ -163,7 +165,8 @@ const ManagementDashboard = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 w-full overflow-x-hidden">
+    <>
+      <div className="p-4 sm:p-6 lg:p-8 w-full overflow-x-hidden">
       <div className="mb-10 sm:mb-12">
         <h1 className="text-2xl sm:text-3xl font-bold text-navy-900 mb-3">Executive Dashboard</h1>
         <p className="text-sm sm:text-base text-slate-600">Complete overview of all RFPs and pipeline status</p>
@@ -462,7 +465,10 @@ const ManagementDashboard = () => {
           </div>
         </aside>
       </div>
-    </div>
+      </div>
+      {!chatbotOpen && <FloatingChatbotButton onClick={() => setChatbotOpen(true)} />}
+      <ChatbotPopup open={chatbotOpen} onClose={() => setChatbotOpen(false)} />
+    </>
   );
 };
 
