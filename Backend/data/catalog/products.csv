@@ -1,0 +1,20 @@
+SKU,Brand,Description,Category,Conductor_Type,Conductor_Dia_mm,Pair_Count,Insulation,Armouring,Sheath,Standard,MII_Percent,Base_Price_Per_Km,Stock_Availability
+FIN-PIJF-100P-05,Finolex,100 Pair 0.5mm PIJF Armoured Telecom Cable,Telecom Cable,Annealed Copper,0.5,100,PIJF,Galvanized Steel Tape Double,MDPE,TEC GR/CUG-01/03,95,780000,In Stock
+POL-PIJF-100P-05,Polycab,100 Pair 0.5mm PIJF Armoured Telecom Cable,Telecom Cable,Annealed Copper,0.5,100,PIJF,Galvanized Steel Tape Double,MDPE,TEC GR/CUG-01/03,90,750000,In Stock
+FIN-PIJF-50P-05,Finolex,50 Pair 0.5mm PIJF Armoured Telecom Cable,Telecom Cable,Annealed Copper,0.5,50,PIJF,Galvanized Steel Tape Double,MDPE,TEC GR/CUG-01/03,95,420000,In Stock
+POL-PIJF-50P-05,Polycab,50 Pair 0.5mm PIJF Armoured Telecom Cable,Telecom Cable,Annealed Copper,0.5,50,PIJF,Galvanized Steel Tape Double,MDPE,TEC GR/CUG-01/03,90,400000,Low Stock
+FIN-PIJF-20P-05,Finolex,20 Pair 0.5mm PIJF Armoured Telecom Cable,Telecom Cable,Annealed Copper,0.5,20,PIJF,Galvanized Steel Tape Double,MDPE,TEC GR/CUG-01/03,95,190000,In Stock
+POL-PIJF-20P-05,Polycab,20 Pair 0.5mm PIJF Armoured Telecom Cable,Telecom Cable,Annealed Copper,0.5,20,PIJF,Galvanized Steel Tape Double,MDPE,TEC GR/CUG-01/03,90,180000,In Stock
+FIN-PIJF-10P-05,Finolex,10 Pair 0.5mm PIJF Armoured Telecom Cable,Telecom Cable,Annealed Copper,0.5,10,PIJF,Galvanized Steel Tape Double,MDPE,TEC GR/CUG-01/03,95,110000,In Stock
+POL-PIJF-10P-05,Polycab,10 Pair 0.5mm PIJF Armoured Telecom Cable,Telecom Cable,Annealed Copper,0.5,10,PIJF,Galvanized Steel Tape Double,MDPE,TEC GR/CUG-01/03,90,105000,In Stock
+FIN-PIJF-5P-05,Finolex,5 Pair 0.5mm PIJF Armoured Telecom Cable,Telecom Cable,Annealed Copper,0.5,5,PIJF,Galvanized Steel Tape Double,MDPE,TEC GR/CUG-01/03,95,65000,In Stock
+POL-PIJF-5P-05,Polycab,5 Pair 0.5mm PIJF Armoured Telecom Cable,Telecom Cable,Annealed Copper,0.5,5,PIJF,Galvanized Steel Tape Double,MDPE,TEC GR/CUG-01/03,90,62000,In Stock
+DEL-PIJF-100P-05,Delton,100 Pair 0.5mm PIJF Armoured Telecom Cable,Telecom Cable,Annealed Copper,0.5,100,PIJF,Galvanized Steel Tape Double,MDPE,TEC GR/CUG-01/03,80,710000,In Stock
+DEL-PIJF-50P-05,Delton,50 Pair 0.5mm PIJF Armoured Telecom Cable,Telecom Cable,Annealed Copper,0.5,50,PIJF,Galvanized Steel Tape Double,MDPE,TEC GR/CUG-01/03,80,390000,In Stock
+FIN-UTP-5P-05,Finolex,5 Pair 0.5mm UTP Unarmored Telecom Cable,Telecom Cable,Annealed Copper,0.5,5,PVC,Unarmored,PVC,GR/WIR 06/03,95,35000,In Stock
+POL-UTP-5P-05,Polycab,5 Pair 0.5mm UTP Unarmored Telecom Cable,Telecom Cable,Annealed Copper,0.5,5,PVC,Unarmored,PVC,GR/WIR 06/03,90,32000,In Stock
+PVC-SB-10C-06,Finolex,10 Core 0.6mm PVC Switch Board Cable,Switch Board Cable,Annealed Copper,0.6,10,PVC,Unarmored,PVC,ITD S/WS 113C,95,45000,In Stock
+PVC-SB-20C-06,Finolex,20 Core 0.6mm PVC Switch Board Cable,Switch Board Cable,Annealed Copper,0.6,20,PVC,Unarmored,PVC,ITD S/WS 113C,95,85000,In Stock
+PVC-SB-50C-06,Finolex,50 Core 0.6mm PVC Switch Board Cable,Switch Board Cable,Annealed Copper,0.6,50,PVC,Unarmored,PVC,ITD S/WS 113C,95,200000,In Stock
+OFC-SM-24F-ARM,Sterlite,24 Fiber Single Mode Armoured Optical Fiber Cable,Optical Fiber,Glass,N/A,N/A,N/A,Corrugated Steel Tape,HDPE,TEC GR/OFC-17/01,70,65000,In Stock
+OFC-SM-48F-ARM,Sterlite,48 Fiber Single Mode Armoured Optical Fiber Cable,Optical Fiber,Glass,N/A,N/A,N/A,Corrugated Steel Tape,HDPE,TEC GR/OFC-17/01,70,95000,In Stock
